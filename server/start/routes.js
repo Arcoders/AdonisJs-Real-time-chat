@@ -19,6 +19,7 @@ Route.group(() => {
 
   // Auth ---------------------------------------------------------
 
-  Route.post('auth/register', 'UserController.register')
+  Route.post('auth/register', 'UserController.register').validator('RegisterUser')
+  Route.post('auth/login', 'UserController.login')
 
 }).prefix('api')
