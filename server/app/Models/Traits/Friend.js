@@ -9,7 +9,7 @@ class Friend {
 
     const options = Object.assign(defaultOptions, customOptions)
 
-    Model.addFriend = async (currentUserId, recipientId) => {
+    Model.addFriend = async (recipientId, currentUserId) => {
 
       await Friendship.create({ requester: currentUserId, requested: ObjectId(recipientId), status: 0 })
 
@@ -17,11 +17,19 @@ class Friend {
 
     }
 
-    Model.acceptFriend = async (currentUserId, senderId) => {
+    Model.acceptFriend = async (senderId, currentUserId) => {
       
       await Friendship.query().betweenUsers(ObjectId(senderId), currentUserId).update({ status: 1 })
 
       return { status: 'friends' }
+
+    }
+
+    Model.rejectFriend = async (senderId, currentUserId) => {
+
+      await Friendship.query().betweenUsers(ObjectId(senderId), currentUserId).delete()
+
+      return { status: 'not_friends' }
 
     }
 

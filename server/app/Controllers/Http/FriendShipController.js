@@ -8,7 +8,7 @@ class FriendShipController {
 
         const currentUser = await auth.getUser()
 
-        return await User.addFriend(currentUser._id, recipientId);
+        return await User.addFriend(recipientId, currentUser._id);
 
     }
 
@@ -16,7 +16,15 @@ class FriendShipController {
 
         const currentUser = await auth.getUser()
 
-        return await User.acceptFriend(currentUser._id, senderId);
+        return await User.acceptFriend(senderId, currentUser._id);
+
+    }
+
+    async reject({ auth, params: { senderId } }) {
+
+        const currentUser = await auth.getUser()
+
+        return await User.rejectFriend(senderId, currentUser._id);
 
     }
 
