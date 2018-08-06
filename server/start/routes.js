@@ -22,4 +22,8 @@ Route.group(() => {
   Route.post('auth/register', 'UserController.register').validator('RegisterUser')
   Route.post('auth/login', 'UserController.login').validator('LoginUser')
 
+  // Friendship ---------------------------------------------------------
+
+  Route.post('/friends/add/:recipientId', 'FriendShipController.addFriend')
+
 }).prefix('api')
