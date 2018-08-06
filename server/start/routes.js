@@ -24,6 +24,7 @@ Route.group(() => {
 
   // Friendship ---------------------------------------------------------
 
-  Route.post('/friends/add/:recipientId', 'FriendShipController.addFriend')
+  Route.post('/friends/add/:recipientId', 'FriendShipController.add')
+  Route.post('/friends/accept/:senderId', 'FriendShipController.accept')
 
 }).prefix('api')
