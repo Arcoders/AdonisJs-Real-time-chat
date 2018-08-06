@@ -16,10 +16,14 @@ class Friendship extends Model {
 
     }
 
-    static scopeBetweenUsers(query, recipientId, senderId) {
+    static scopeBetweenUsers(query, senderId, recipientId) {
+
+
 
         query.where(function () {
-            this.whereSender(recipientId).whereRecipient(senderId)
+
+            this.whereSender(senderId).whereRecipient(recipientId)
+    
         })
 
     }

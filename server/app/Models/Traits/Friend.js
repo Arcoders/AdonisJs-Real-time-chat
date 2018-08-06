@@ -19,9 +19,9 @@ class Friend {
 
     Model.acceptFriend = async (currentUserId, senderId) => {
       
-      const b = await Friendship.query().betweenUsers(currentUserId, ObjectId(senderId)).fetch()
+      await Friendship.query().betweenUsers(ObjectId(senderId), currentUserId).update({ status: 1 })
 
-      return { status: 'friends', b }
+      return { status: 'friends' }
 
     }
 
