@@ -33,7 +33,34 @@ class Friend {
 
     }
 
+    Model.checkFriendship = async (userId, currentUserId) => {
+
+      if (currentUserId === ObjectId(userId)) return {status: 'same_user'}
+      
+      const a = await this.getRelationship(ObjectId(userId), currentUserId);
+      const b = await this.getRelationship(currentUserId, ObjectId(userId));
+
+      const friendship = (!a) ? b : a
+
+      if (!friendship) return { status: 'not_friends' }
+
+      if (friendship['status'] === 1) return { status: 'friends' }
+
+      if (friendship['requester'].equals(currentUserId)) return { status: 'waiting' }
+
+      if (friendship['requested'].equals(userId)) return { status: 'pending' }
+
+    }
+
   }
+
+  async getRelationship(user1, user2) {
+
+    return await Friendship.query().betweenUsers(user1, user2).first()
+
+  }
+
+
 }
 
 module.exports = Friend
