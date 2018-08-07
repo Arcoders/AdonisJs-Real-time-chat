@@ -40,7 +40,7 @@ class FriendShipController {
 
         const status = await User.checkFriendship(userId, currentUser._id)
 
-        return status
+        return { status }
 
     }
 
