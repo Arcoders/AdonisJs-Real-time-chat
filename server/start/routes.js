@@ -26,7 +26,7 @@ Route.group(() => {
 
   Route.post('/friends/add/:recipientId', 'FriendShipController.add')
   Route.post('/friends/accept/:senderId', 'FriendShipController.accept')
-  Route.delete('/friends/reject/:senderId', 'FriendShipController.reject')
+  Route.delete('/friends/reject/:userId', 'FriendShipController.reject')
   Route.get('/friends/check/:userId', 'FriendShipController.check')
 
 }).prefix('api')

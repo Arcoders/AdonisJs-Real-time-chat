@@ -9,45 +9,74 @@ class Friend {
 
     const options = Object.assign(defaultOptions, customOptions)
 
+
     Model.addFriend = async (recipientId, currentUserId) => {
 
-      await Friendship.create({ requester: currentUserId, requested: ObjectId(recipientId), status: 0 })
+      let status = await Model.checkFriendship(recipientId, currentUserId)
+      
+      if (status === 'not_friends') {
+        
+        await Friendship.create({ requester: currentUserId, requested: ObjectId(recipientId), status: 0 })
 
-      return { status: 'waiting' }
+        return 'waiting'
+
+      }
+
+      return status
 
     }
+
 
     Model.acceptFriend = async (senderId, currentUserId) => {
       
-      await Friendship.query().betweenUsers(ObjectId(senderId), currentUserId).update({ status: 1 })
+      const status = await Model.checkFriendship(senderId, currentUserId)
 
-      return { status: 'friends' }
+      if (status === 'pending') {
+
+        await Friendship.query().betweenUsers(ObjectId(senderId), currentUserId).update({ status: 1 })
+
+        return 'friends'
+
+      }
+
+      return status
 
     }
 
-    Model.rejectFriend = async (senderId, currentUserId) => {
 
-      await Friendship.query().betweenUsers(ObjectId(senderId), currentUserId).delete()
+    Model.rejectFriendship = async (userId, currentUserId) => {
 
-      return { status: 'not_friends' }
+      const status = await Model.checkFriendship(userId, currentUserId)
+
+      if (status !== 'not_friends') {
+
+        await Friendship.query().betweenUsers(ObjectId(userId), currentUserId).delete()
+
+        return 'not_friends'
+
+      }
+
+      return status
 
     }
+
 
     Model.checkFriendship = async (userId, currentUserId) => {
 
-      if (currentUserId.equals(userId)) return {status: 'same_user'}
+      if (currentUserId.equals(userId)) return 'same_user'
       
       const friendship = await Friendship.query().betweenUsers(ObjectId(userId), currentUserId).first()
 
-      if (!friendship) return { status: 'not_friends' }
+      if (!friendship) return 'not_friends'
 
-      if (friendship['status'] === 1) return { status: 'friends' }
+      if (friendship['status'] === 1) return 'friends'
 
-      if (friendship['requester'].equals(currentUserId)) return { status: 'waiting' }
+      if (friendship['requester'].equals(currentUserId)) return 'waiting'
 
-      if (friendship['requested'].equals(userId)) return { status: 'pending' }
+      if (friendship['requested'].equals(currentUserId)) return 'pending'
 
     }
+
 
   }
 
