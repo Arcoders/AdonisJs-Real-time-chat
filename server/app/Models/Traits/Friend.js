@@ -35,7 +35,7 @@ class Friend {
 
     Model.checkFriendship = async (userId, currentUserId) => {
 
-      if (currentUserId === ObjectId(userId)) return {status: 'same_user'}
+      if (currentUserId.equals(userId)) return {status: 'same_user'}
       
       const a = await this.getRelationship(ObjectId(userId), currentUserId);
       const b = await this.getRelationship(currentUserId, ObjectId(userId));
