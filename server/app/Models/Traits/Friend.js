@@ -37,10 +37,7 @@ class Friend {
 
       if (currentUserId.equals(userId)) return {status: 'same_user'}
       
-      const a = await this.getRelationship(ObjectId(userId), currentUserId);
-      const b = await this.getRelationship(currentUserId, ObjectId(userId));
-
-      const friendship = (!a) ? b : a
+      const friendship = await Friendship.query().betweenUsers(ObjectId(userId), currentUserId).first()
 
       if (!friendship) return { status: 'not_friends' }
 
@@ -51,12 +48,6 @@ class Friend {
       if (friendship['requested'].equals(userId)) return { status: 'pending' }
 
     }
-
-  }
-
-  async getRelationship(user1, user2) {
-
-    return await Friendship.query().betweenUsers(user1, user2).first()
 
   }
 
