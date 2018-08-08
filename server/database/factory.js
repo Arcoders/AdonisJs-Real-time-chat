@@ -15,10 +15,10 @@ const Factory = use('Factory')
 const Hash = use('Hash')
 
 
-Factory.blueprint('App/Models/User', (faker) => {
+Factory.blueprint('App/Models/User', (faker, i, data) => {
   return {
-    email: faker.email(),
-    username: faker.username(),
+    email: (data.email) ? data.email : faker.email(),
+    username: (data.username) ? data.username : faker.username(),
     password: Hash.make('secret')
   }
 })
