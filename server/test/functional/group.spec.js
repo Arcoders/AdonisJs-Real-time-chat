@@ -81,11 +81,8 @@ test('user can delete a group', async ({ client, assert }) => {
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()
 
-  const group = await Group.create({
-    name: 'Arcoders',
-    avatar: null,
-    user_id: admin._id
-  })
+
+  const group = await Factory.model('App/Models/Group').create({ user_id: admin._id })
 
   await group.users().attach([user1._id])
 
