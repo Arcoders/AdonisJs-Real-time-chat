@@ -39,6 +39,15 @@ class GroupController {
 
     }
 
+    async destroy ({ group }) {
+
+        await group.users().detach()
+        await group.delete()
+
+        return { status: 'Group deleted successfully' }
+
+    }
+
 }
 
 module.exports = GroupController

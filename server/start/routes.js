@@ -36,6 +36,9 @@ Route.group(() => {
   Route.patch('groups/:groupId', 'GroupController.update')
        .validator('NewGroup')
        .bind('App/Models/Group', 'group', 'groupId', '_id')
+
+  Route.delete('groups/:groupId', 'GroupController.destroy')
+       .bind('App/Models/Group', 'group', 'groupId', '_id')     
        
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
 

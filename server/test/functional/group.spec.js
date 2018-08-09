@@ -75,3 +75,26 @@ test('user can create and update a group', async ({ client }) => {
 
 })
 
+
+test('user can delete a group', async ({ client, assert }) => {
+
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+
+  const group = await Group.create({
+    name: 'Arcoders',
+    avatar: null,
+    user_id: admin._id
+  })
+
+  await group.users().attach([user1._id])
+
+  assert.equal(2, await Group.count())
+
+  const destroy = await client.delete(`api/groups/${group._id}`).loginVia(admin).end()
+  destroy.assertStatus(200)
+  destroy.assertJSON({ status: 'Group deleted successfully' })
+
+  assert.equal(1, await Group.count())
+
+})
