@@ -1,7 +1,6 @@
 'use strict'
 
 const User = use('App/Models/User');
-const { validate } = use('Validator')
 
 class UserController {
 

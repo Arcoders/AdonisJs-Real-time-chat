@@ -12,14 +12,18 @@
 */
 
 const Factory = use('Factory')
-const Hash = use('Hash')
-
 
 Factory.blueprint('App/Models/User', (faker, i, data) => {
   return {
     email: (data.email) ? data.email : faker.email(),
     username: (data.username) ? data.username : faker.username(),
-    password: Hash.make('secret')
+    password: 'secret'
   }
 })
 
+Factory.blueprint('App/Models/Users', (faker) => {
+  return {
+    name: fake.name(),
+    avatar: `https://api.adorable.io/avatars/285/${fake.last()}.png`,
+  }
+})

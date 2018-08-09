@@ -78,6 +78,13 @@ class Friend {
     }
 
 
+    Model.areFriends = async (userId, currentUserId) => {
+
+      return await Model.checkFriendship(userId, currentUserId) === 'friends'
+      
+    }
+
+
   }
 
 

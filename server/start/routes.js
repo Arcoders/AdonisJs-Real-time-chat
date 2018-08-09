@@ -29,4 +29,9 @@ Route.group(() => {
   Route.delete('/friends/reject/:userId', 'FriendShipController.reject')
   Route.get('/friends/check/:userId', 'FriendShipController.check')
 
+  // Groups ---------------------------------------------------------
+
+  Route.get('groups', 'GroupController.groups')
+  Route.post('groups/create', 'GroupController.create').validator('NewGroup')
+
 }).prefix('api')
