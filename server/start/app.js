@@ -18,7 +18,8 @@ const providers = [
   '@adonisjs/lucid/providers/LucidProvider',
   'lucid-mongo/providers/LucidMongoProvider',
   '@adonisjs/validator/providers/ValidatorProvider',
-  '@adonisjs/vow/providers/VowProvider'
+  '@adonisjs/vow/providers/VowProvider',
+  'adonis-route-model-binding/providers/RouteModelBindingProvider',
 ]
 
 /*

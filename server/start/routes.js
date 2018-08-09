@@ -32,6 +32,11 @@ Route.group(() => {
   // Groups ---------------------------------------------------------
 
   Route.get('groups', 'GroupController.groups')
+
+  Route.patch('groups/:groupId', 'GroupController.update')
+       .validator('NewGroup')
+       .bind('App/Models/Group', 'group', 'groupId', '_id')
+       
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
 
 }).prefix('api')

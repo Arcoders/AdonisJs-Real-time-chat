@@ -3,39 +3,75 @@
 const { test, trait } = use('Test/Suite')('Group')
 const ObjectId = require('mongodb').ObjectID;
 const Factory = use('Factory')
+const Group = use('App/Models/Group')
 trait('Test/ApiClient')
 trait('Auth/Client')
 
 
-test('user can create a group', async ({ client }) => {
+test('user can create and update a group', async ({ client }) => {
 
-  const auth = await Factory.model('App/Models/User').create()
-  const guest = await Factory.model('App/Models/User').create()
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+  const user2 = await Factory.model('App/Models/User').create()
 
-  const res = await client
-                          .post('api/groups/create/')
-                          .send({ name: 'Adonis', usersId: [auth._id, guest._id] })
-                          .loginVia(auth)
-                          .end()
+  // Create group
+  
+  const postData = {
+    name: 'Adonis',
+    usersId: [admin._id, user1._id]
+  }
 
-  res.assertStatus(200)
+  const post = await client.post('api/groups/create').send(postData).loginVia(admin).end()
 
-  res.assertJSONSubset({
+  post.assertStatus(200)
+
+  post.assertJSONSubset({
     status: 'Group created successfully',
     group: {
       name: 'Adonis',
-      user_id: ObjectId(auth._id).toString(),
+      user_id: ObjectId(admin._id).toString(),
       users: [
         {
-          user_id: ObjectId(auth._id).toString()
+          user_id: ObjectId(admin._id).toString()
+        }, 
+        {
+          user_id: ObjectId(user1._id).toString()
+        }
+      ]
+    } 
+  })
+
+  // Edit the same group
+
+  const group = await Group.first()
+
+  const postUpdated = {
+    name: 'Adonis - Edited',
+    usersId: [admin._id, user1._id, user2._id]
+  }
+
+  const patch = await client.patch(`api/groups/${group._id}`).send(postUpdated).loginVia(admin).end()
+
+  patch.assertStatus(200)
+
+  patch.assertJSONSubset({
+    status: 'Group updated successfully',
+    group: {
+      name: 'Adonis - Edited',
+      user_id: ObjectId(admin._id).toString(),
+      users: [
+        { 
+          user_id: ObjectId(admin._id).toString() 
+        }, 
+        { 
+          user_id: ObjectId(user1._id).toString() 
         },
         {
-          user_id: ObjectId(guest._id).toString()
+          user_id: ObjectId(user2._id).toString()
         }
       ]
     } 
   })
 
 })
-
 
