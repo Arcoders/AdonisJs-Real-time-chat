@@ -31,6 +31,8 @@ Route.group(() => {
 
   // Groups ---------------------------------------------------------
 
+  Route.get('test', 'TestController.smiti')
+
   Route.get('groups', 'GroupController.groups')
 
   Route.patch('groups/:groupId', 'GroupController.update')
