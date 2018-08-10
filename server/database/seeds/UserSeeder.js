@@ -16,19 +16,19 @@ class UserSeeder {
   async run () {
     
     const ismael = await Factory.model('App/Models/User').create({
-                    email: 'Arcoder@gmail.com',
-                    username: 'Ismael Haytam'
-                  })
+      email: 'Arcoder@gmail.com',
+      username: 'Ismael Haytam'
+    })
 
     const marta = await Factory.model('App/Models/User').create({
-                    email: 'Marta@gmail.com',
-                    username: 'Marta Lopez'
-                  })
+      email: 'Marta@gmail.com',
+      username: 'Marta Lopez'
+    })
 
     const victor = await Factory.model('App/Models/User').create({
-                    email: 'Victor@gmail.com',
-                    username: 'Victor Crack'
-                  })
+      email: 'Victor@gmail.com',
+      username: 'Victor Crack'
+    })
 
     
     await Factory.model('App/Models/Friendship').create({
@@ -49,10 +49,47 @@ class UserSeeder {
       status: 0
     })
 
+    const arcoders = await Factory.model('App/Models/Group').create({
+      name: 'Arcoders',
+      user_id: ismael._id,
+      avatar: null
+    })
+
+    arcoders.users().attach([ismael._id, marta._id])
+
+    const fustal = await Factory.model('App/Models/Group').create({
+      name: 'Fustal Girona',
+      user_id: ismael._id,
+      avatar: null
+    })
+
+    fustal.users().attach([ismael._id, marta._id, victor._id])
+
+    const javascript = await Factory.model('App/Models/Group').create({
+      name: 'Javascript',
+      user_id: ismael._id,
+      avatar: null
+    })
+
+    javascript.users().attach([ismael._id, marta._id, victor._id])
+
+    const tecno = await Factory.model('App/Models/Group').create({
+      name: 'Tecnología',
+      user_id: marta._id,
+      avatar: null
+    })
+
+    tecno.users().attach([marta._id, ismael._id])
+
     const users = await Factory.model('App/Models/User').createMany(10)
 
     users.forEach(async user => {
     
+      const group = await Factory.model('App/Models/Group').create({
+        user_id: user._id
+      })
+
+      group.users().attach([user._id, ismael._id])
 
       const friends = await Factory.model('App/Models/Friendship').createMany(5, {
         requester: ismael._id,

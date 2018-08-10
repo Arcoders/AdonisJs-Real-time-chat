@@ -26,13 +26,11 @@ Factory.blueprint('App/Models/User', (faker, i, data) => {
 
 Factory.blueprint('App/Models/Group', async (faker, i, data) => {
 
-  const user_id =  (data.user_id) ? data.user_id : await Factory.model('App/Models/User').create()._id
+  const user_id = (data.user_id) ? data.user_id : await Factory.model('App/Models/User').create()._id
+  const avatar = (data.avatar) ? data.avatar : `https://api.adorable.io/avatars/285/${faker.last()}.png`
+  const name = (data.name) ? data.name : faker.name()
 
-  return {
-    name: faker.name(),
-    avatar: `https://api.adorable.io/avatars/285/${faker.last()}.png`,
-    user_id
-  }
+  return { name, avatar, user_id }
 
 })
 

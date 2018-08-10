@@ -27,6 +27,41 @@ class Friendship extends Model {
 
     }
 
+    static scopeSentAndAccepted(query, currentUserId) {
+        
+        return query.whereSender(currentUserId).accepted().select('_id', 'requested').with('recipient')
+    }
+
+    static scopeReceivedAndAccepted(query, currentUserId) {
+
+        return query.whereRecipient(currentUserId).accepted().select('_id', 'requester').with('sender')
+
+    }
+
+    static scopeAccepted(query) {
+
+        return query.where({status : 1})
+
+    }
+
+    sender() {
+
+      return this.belongsTo('App/Models/User', 'requester')
+
+    }
+
+    recipient() {
+
+      return this.belongsTo('App/Models/User', 'requested')
+
+    }
+
+    messages() {
+
+        return this.hasMany('App/Models/Message', 'friend_chat')
+        
+    }
+
 }
 
 module.exports = Friendship

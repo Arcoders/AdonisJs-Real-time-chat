@@ -42,4 +42,9 @@ Route.group(() => {
        
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
 
+
+  // Chats ---------------------------------------------------------
+
+  Route.get('chats', 'ChatController.chats')
+
 }).prefix('api')
