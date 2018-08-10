@@ -30,9 +30,7 @@ Route.group(() => {
   Route.get('/friends/check/:userId', 'FriendShipController.check')
 
   // Groups ---------------------------------------------------------
-
-  Route.get('test', 'TestController.smiti')
-
+  
   Route.get('groups', 'GroupController.groups')
 
   Route.patch('groups/:groupId', 'GroupController.update')
