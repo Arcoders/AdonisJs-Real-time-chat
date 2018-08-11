@@ -1,6 +1,7 @@
 'use strict'
 const ObjectId = require('mongodb').ObjectID;
 const Friendship = use('App/Models/Friendship')
+const renameKeys = require('rename-keys');
 
 class Friend {
   register (Model, customOptions = {}) {
@@ -87,13 +88,19 @@ class Friend {
 
     Model.chats = async (currentUserId) => {
    
-      return { 
+      const rooms = (await Friendship.query().rooms(currentUserId).fetch()).toJSON()
 
-        ...(await Friendship.query().sentAndAccepted(currentUserId).fetch()).toJSON(),
-        
-        ...(await Friendship.query().receivedAndAccepted(currentUserId).fetch()).toJSON()
-      
+      let result = []
+
+      for (let room of rooms) {
+
+        (ObjectId(room.sender._id).equals(currentUserId)) ? delete room.sender: delete room.recipient
+
+        result.push(renameKeys(room, key => (key === 'sender' || key === 'recipient') ? 'user' : key))
+
       }
+
+      return result
 
     }
 

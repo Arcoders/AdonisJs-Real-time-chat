@@ -2,7 +2,7 @@
 
 const User = use('App/Models/User')
 const Friendship = use('App/Models/Friendship')
-const renameKeys = require('rename-keys');
+const Group = use('App/Models/Group')
 
 class ChatController {
 
@@ -12,11 +12,11 @@ class ChatController {
 
         return { 
 
-            friends: await this.withLastMessage(await User.chats(user._id)),
+            friends: await this.withLastMessage(await User.chats(user._id), Friendship),
 
             friendsId: await User.chatsId(user._id),
 
-            groups: await user.groups().fetch(),
+            groups: await this.withLastMessage((await user.groups().fetch()).toJSON(), Group),
 
             groupsId: (await user.groups().pluck('_id')).map(obj => obj._id)
             
@@ -25,15 +25,13 @@ class ChatController {
     }
 
 
-    async withLastMessage(chats) {
+    async withLastMessage(chats, Model) {
 
         let result = []
 
         for (const i of Object.keys(chats)) {
         
-            chats[i] = renameKeys(chats[i], key => (key === 'sender' || key === 'recipient') ? 'user' : key)
-
-            const msg = await (await Friendship.find(chats[i]._id)).messages().orderBy('_id', 'desc').first()
+            const msg = await (await Model.find(chats[i]._id)).messages().orderBy('_id', 'desc').first()
 
             result.push({ ...chats[i], ...{message: msg} })
 

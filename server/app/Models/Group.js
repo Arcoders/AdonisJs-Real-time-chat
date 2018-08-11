@@ -12,7 +12,7 @@ class Group extends Model {
 
     messages() {
 
-        return this.hasMany('App/Models/Message', 'group_chat')
+        return this.hasMany('App/Models/Message', '_id', 'group_chat')
     
     }
 

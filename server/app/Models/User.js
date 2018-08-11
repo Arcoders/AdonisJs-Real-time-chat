@@ -31,15 +31,21 @@ class User extends Model {
    * @return {Object}
    */
   tokens () {
+
     return this.hasMany('App/Models/Token')
+    
   }
 
   groups() {
+
     return this.belongsToMany('App/Models/Group')
+
   }
 
   static get hidden() {
+
     return ['password']
+
   }
 
 }

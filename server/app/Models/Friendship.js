@@ -27,14 +27,15 @@ class Friendship extends Model {
 
     }
 
-    static scopeSentAndAccepted(query, currentUserId) {
-        
-        return query.whereSender(currentUserId).accepted().select('_id', 'requested').with('recipient')
-    }
+    static scopeRooms(query, currentUserId) {
 
-    static scopeReceivedAndAccepted(query, currentUserId) {
-
-        return query.whereRecipient(currentUserId).accepted().select('_id', 'requester').with('sender')
+        query.where({
+            $or: [
+                { requester:  currentUserId, status: 1 },
+                { requested: currentUserId, status: 1 }
+            ]
+        })
+        .select('_id', 'requester', 'requested').with(['sender', 'recipient'])
 
     }
 
