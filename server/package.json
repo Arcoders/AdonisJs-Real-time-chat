@@ -27,7 +27,8 @@
     "@adonisjs/validator": "^5.0.3",
     "@adonisjs/vow": "^1.0.16",
     "adonis-route-model-binding": "^0.1.0",
-    "lucid-mongo": "^3.1.0"
+    "lucid-mongo": "^3.1.0",
+    "rename-keys": "^2.0.1"
   },
   "devDependencies": {},
   "autoload": {

@@ -2,6 +2,7 @@
 
 const User = use('App/Models/User')
 const Friendship = use('App/Models/Friendship')
+const renameKeys = require('rename-keys');
 
 class ChatController {
 
@@ -9,15 +10,17 @@ class ChatController {
 
         const user = await auth.getUser()
 
-        const groups = await user.groups().fetch()
+        return { 
 
-        const groupsId = (await user.groups().pluck('_id')).map(obj => obj._id);
+            friends: await this.withLastMessage(await User.chats(user._id)),
 
-        const friends = await this.withLastMessage(await User.chats(user._id))
+            friendsId: await User.chatsId(user._id),
 
-        const friendsId = await User.chatsId(user._id)
+            groups: await user.groups().fetch(),
 
-        return { friends, friendsId, groups, groupsId }
+            groupsId: (await user.groups().pluck('_id')).map(obj => obj._id)
+            
+        }
 
     }
 
@@ -26,14 +29,13 @@ class ChatController {
 
         let result = []
 
-        for (const key of Object.keys(chats)) {
-          
-            const msg = await (await Friendship.find(chats[key]._id)).messages().first()
+        for (const i of Object.keys(chats)) {
+        
+            chats[i] = renameKeys(chats[i], key => (key === 'sender' || key === 'recipient') ? 'user' : key)
 
-            result.push({
-                ...chats[key],
-                ...{message: (msg) ? msg.toJSON() : msg}
-            })
+            const msg = await (await Friendship.find(chats[i]._id)).messages().first()
+
+            result.push({ ...chats[i], ...{message: (msg) ? msg.toJSON() : msg} })
 
         }
 
