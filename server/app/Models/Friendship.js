@@ -61,6 +61,7 @@ class Friendship extends Model {
         return this.hasMany('App/Models/Message', '_id', 'friend_chat')
         
     }
+    
 
 }
 

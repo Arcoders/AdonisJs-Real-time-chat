@@ -33,9 +33,9 @@ class ChatController {
         
             chats[i] = renameKeys(chats[i], key => (key === 'sender' || key === 'recipient') ? 'user' : key)
 
-            const msg = await (await Friendship.find(chats[i]._id)).messages().first()
+            const msg = await (await Friendship.find(chats[i]._id)).messages().orderBy('_id', 'desc').first()
 
-            result.push({ ...chats[i], ...{message: (msg) ? msg.toJSON() : msg} })
+            result.push({ ...chats[i], ...{message: msg} })
 
         }
 
