@@ -87,11 +87,28 @@ class Friend {
 
     Model.chats = async (currentUserId) => {
    
-      const sent = await Friendship.query().sentAndAccepted(currentUserId).fetch()
+      return { 
 
-      const received = await Friendship.query().receivedAndAccepted(currentUserId).fetch()
+        ...(await Friendship.query().sentAndAccepted(currentUserId).fetch()).toJSON(),
+        
+        ...(await Friendship.query().receivedAndAccepted(currentUserId).fetch()).toJSON()
+      
+      }
 
-      return { sent, received }
+    }
+
+
+    Model.chatsId = async (currentUserId) => {
+
+      return (
+
+        await Friendship.query().whereSender(currentUserId).accepted().pluck('_id')
+     
+      ).concat(
+
+        await Friendship.query().whereRecipient(currentUserId).accepted().pluck('_id')
+      
+      )
 
     }
 

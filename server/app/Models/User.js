@@ -4,6 +4,7 @@ const Model = use('Model')
 const Hash = use('Hash')
 
 class User extends Model {
+  
   static boot () {
     super.boot()
     this.addTrait('Friend')
@@ -35,6 +36,10 @@ class User extends Model {
 
   groups() {
     return this.belongsToMany('App/Models/Group')
+  }
+
+  static get hidden() {
+    return ['password']
   }
 
 }
