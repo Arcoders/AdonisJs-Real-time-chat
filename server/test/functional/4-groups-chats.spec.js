@@ -16,10 +16,10 @@ test('get chat groups with the last message of the conversation', async ({ clien
 
   // Group 1
 
-  const react = await Factory.model('App/Models/Group').create({
+  const react = (await Factory.model('App/Models/Group').create({
     name: 'React',
     user_id: berto._id
-  })
+  }))
 
   await react.users().attach([berto._id, david._id])
 
