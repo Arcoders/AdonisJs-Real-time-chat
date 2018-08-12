@@ -9,7 +9,7 @@ trait('Test/ApiClient')
 trait('Auth/Client')
 
 
-test('get chat groups with the last message in the conversation', async ({ client }) => {
+test('get chat groups with the last message of the conversation', async ({ client }) => {
 
   const berto = await Factory.model('App/Models/User').create({ username: 'Berto Romero' })
   const david = await Factory.model('App/Models/User').create({ username: 'David Alva' })
@@ -95,4 +95,4 @@ test('get chat groups with the last message in the conversation', async ({ clien
     groupsId: [ObjectId(vue._id).toString()]
   })
 
-})
+}).timeout(0)

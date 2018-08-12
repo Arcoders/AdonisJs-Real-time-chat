@@ -177,4 +177,4 @@ const martaChats = await client.get('api/chats').loginVia(marta).end()
     friendsId: [ObjectId(chat4._id).toString()]
   })
 
-})
+}).timeout(0)

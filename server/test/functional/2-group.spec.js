@@ -23,7 +23,7 @@ test('user can delete a group', async ({ client, assert }) => {
 })
 
 
-test('user can create and update a group', async ({ client }) => {
+test('user can create a group', async ({ client }) => {
 
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()
@@ -56,23 +56,37 @@ test('user can create and update a group', async ({ client }) => {
     } 
   })
 
-  // Edit the same group
+})
 
-  const group = await Group.first()
 
-  const postUpdated = {
-    name: 'Adonis - Edited',
+test('user can edit a group', async ({ client }) => {
+
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+  const user2 = await Factory.model('App/Models/User').create()
+
+  const laravel = await Factory.model('App/Models/Group').create({
+    name: 'Laravel',
+    user_id: admin._id
+  })
+
+  await laravel.users().attach([admin._id, user1._id])
+
+  const group = await Group.query().where({user_id: admin._id}).first()
+
+  const postData = {
+    name: 'Laravel - Edited',
     usersId: [admin._id, user1._id, user2._id]
   }
 
-  const patch = await client.patch(`api/groups/${group._id}`).send(postUpdated).loginVia(admin).end()
+  const patch = await client.patch(`api/groups/${group._id}`).send(postData).loginVia(admin).end()
 
   patch.assertStatus(200)
-
+  
   patch.assertJSONSubset({
     status: 'Group updated successfully',
     group: {
-      name: 'Adonis - Edited',
+      name: postData.name,
       user_id: ObjectId(admin._id).toString(),
       users: [
         { 

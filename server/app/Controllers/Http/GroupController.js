@@ -26,10 +26,10 @@ class GroupController {
 
     async update ({ auth, request, group }) {
 
-        const { usersId, name } = request.all();
+        const { usersId } = request.all();
         const user = await auth.getUser()
 
-        group.name = name
+        group.merge(request.only('name'))
         await group.save()
 
         usersId.push(user._id)
