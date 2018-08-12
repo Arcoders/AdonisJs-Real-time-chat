@@ -13,7 +13,6 @@ test('get chat groups with the last message of the conversation', async ({ clien
 
   const berto = await Factory.model('App/Models/User').create({ username: 'Berto Romero' })
   const david = await Factory.model('App/Models/User').create({ username: 'David Alva' })
-  const laura = await Factory.model('App/Models/User').create({ username: 'Laura Ipsum' })
 
   // Group 1
 
@@ -22,7 +21,7 @@ test('get chat groups with the last message of the conversation', async ({ clien
     user_id: berto._id
   })
 
-  await react.users().attach([berto._id, david._id, laura._id])
+  await react.users().attach([berto._id, david._id])
 
   await Factory.model('App/Models/Message').create({
     user_id: berto._id,
@@ -43,16 +42,11 @@ test('get chat groups with the last message of the conversation', async ({ clien
 
   await angular.users().attach([berto._id])
 
-  // Group 3
-
-  const vue = await Factory.model('App/Models/Group').create({
-    name: 'Vue',
-    user_id: david._id
+  const angular_message = await Factory.model('App/Models/Message').create({
+    user_id: berto._id,
+    group_chat: angular._id
   })
 
-  await vue.users().attach([david._id])
-
-  
   // Login as Berto and get groups
 
 
@@ -64,6 +58,7 @@ test('get chat groups with the last message of the conversation', async ({ clien
     groups: [
       {
         name: react.name,
+        user_id: ObjectId(react.user_id).toString(),
         message: {
           body: react_message.body,
           group_chat: ObjectId(react._id).toString(),
@@ -72,23 +67,45 @@ test('get chat groups with the last message of the conversation', async ({ clien
       },
       {
         name: angular.name,
-        message: null
+        user_id: ObjectId(angular.user_id).toString(),
+        message: {
+          body: angular_message.body,
+          group_chat: ObjectId(angular._id).toString(),
+          user_id: ObjectId(berto._id).toString()
+        }
       }
     ],
     groupsId: [ObjectId(react._id).toString(), ObjectId(angular._id).toString()]
   })
 
-  // Login as David and get groups
 
+}).timeout(0)
 
-  const davidGroups = await client.get('api/chats').loginVia(david).end()
+test('verify that the group does not contain messages', async ({ client }) => {
 
-  davidGroups.assertStatus(200)
+  const anna = await Factory.model('App/Models/User').create({ username: 'Anna Doler' })
 
-  davidGroups.assertJSONSubset({
+  // Group 1
+
+  const vue = await Factory.model('App/Models/Group').create({
+    name: 'Vue',
+    user_id: anna._id
+  })
+
+  
+  await vue.users().attach([anna._id])
+
+  // Login as Anna and get groups
+
+  const annaGroups = await client.get('api/chats').loginVia(anna).end()
+
+  annaGroups.assertStatus(200)
+
+  annaGroups.assertJSONSubset({
     groups: [
       {
         name: vue.name,
+        user_id: ObjectId(vue.user_id).toString(),
         message: null
       }
     ],
