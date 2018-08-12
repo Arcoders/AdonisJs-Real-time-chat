@@ -77,7 +77,7 @@ test('get private chat rooms with the last message of the conversation', async (
     status: 1
   })
   
-  // Log in as Ismael and get chats
+  // Login as Ismael and get chats
 
 
   const ismaelChats = await client.get('api/chats').loginVia(ismael).end()
@@ -117,7 +117,7 @@ test('get private chat rooms with the last message of the conversation', async (
   })
 
   
-  // Log in as Marta and get chats
+  // Login as Marta and get chats
 
 const martaChats = await client.get('api/chats').loginVia(marta).end()
 
@@ -156,7 +156,7 @@ const martaChats = await client.get('api/chats').loginVia(marta).end()
   })
 
 
-  // Log in as Fatima and get chats
+  // Login as Fatima and get chats
 
   const fatimaChats = await client.get('api/chats').loginVia(fatima).end()
 

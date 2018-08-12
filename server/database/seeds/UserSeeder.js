@@ -55,7 +55,12 @@ class UserSeeder {
       avatar: null
     })
 
-    arcoders.users().attach([ismael._id, marta._id])
+    await arcoders.users().attach([ismael._id, marta._id])
+
+    await Factory.model('App/Models/Message').create({
+      user_id: ismael._id,
+      group_chat: arcoders._id
+    })
 
     const fustal = await Factory.model('App/Models/Group').create({
       name: 'Fustal Girona',
@@ -63,7 +68,7 @@ class UserSeeder {
       avatar: null
     })
 
-    fustal.users().attach([ismael._id, marta._id, victor._id])
+    await fustal.users().attach([ismael._id, marta._id, victor._id])
 
     const javascript = await Factory.model('App/Models/Group').create({
       name: 'Javascript',
@@ -71,7 +76,7 @@ class UserSeeder {
       avatar: null
     })
 
-    javascript.users().attach([ismael._id, marta._id, victor._id])
+    await javascript.users().attach([ismael._id, marta._id, victor._id])
 
     const tecno = await Factory.model('App/Models/Group').create({
       name: 'Tecnología',
@@ -79,7 +84,7 @@ class UserSeeder {
       avatar: null
     })
 
-    tecno.users().attach([marta._id, ismael._id])
+    await tecno.users().attach([marta._id, ismael._id])
 
     const users = await Factory.model('App/Models/User').createMany(10)
 
@@ -89,7 +94,7 @@ class UserSeeder {
         user_id: user._id
       })
 
-      group.users().attach([user._id, ismael._id])
+      await group.users().attach([user._id, ismael._id])
 
       const friends = await Factory.model('App/Models/Friendship').createMany(5, {
         requester: ismael._id,

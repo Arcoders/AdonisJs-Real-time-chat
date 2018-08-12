@@ -18,7 +18,7 @@ class ChatController {
 
             groups: await this.withLastMessage((await user.groups().fetch()).toJSON(), Group),
 
-            groupsId: (await user.groups().pluck('_id')).map(obj => obj._id)
+            groupsId: ((await user.groups().fetch()).toJSON()).map(obj => obj._id)
             
         }
 
