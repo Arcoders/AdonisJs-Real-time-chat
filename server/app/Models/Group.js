@@ -6,7 +6,7 @@ class Group extends Model {
 
     users() {
 
-        return this.belongsToMany('App/Models/User').withPivot(['user_id', 'group_id'])
+        return this.belongsToMany('App/Models/User')
     
     }
 
