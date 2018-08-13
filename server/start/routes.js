@@ -42,6 +42,8 @@ Route.group(() => {
        
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
 
+  Route.get('groups/:groupId', 'GroupController.groupInformation')
+       .bind('App/Models/Group', 'group', 'groupId', '_id')
 
   // Chats ---------------------------------------------------------
 

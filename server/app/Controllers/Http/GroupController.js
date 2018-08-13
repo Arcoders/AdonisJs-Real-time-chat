@@ -1,13 +1,27 @@
 'use strict'
 
 const Group = use('App/Models/Group')
+const User = use('App/Models/User')
 
 class GroupController {
 
     async groups ({ auth }) {
 
         const user = await auth.getUser()
-        return await Group.query().where({ user_id: user._id }).paginate(1, 3)
+
+        return await Group.query().where({ user_id: user._id }).with('users').paginate(1, 3)
+
+    }
+
+    async groupInformation ({ auth, group }) {
+        
+        const user = await auth.getUser()
+
+        group.users = await group.users().fetch()
+
+        const friends = await User.friends(user._id)
+
+        return { group, friends }
 
     }
 

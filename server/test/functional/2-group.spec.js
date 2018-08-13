@@ -103,3 +103,70 @@ test('user can edit a group', async ({ client }) => {
   })
 
 })
+
+
+test('get group information with users and list of friends', async ({ client }) => {
+
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+  const user2 = await Factory.model('App/Models/User').create()
+
+  // Create Friendship
+
+  await Factory.model('App/Models/Friendship').create({
+    requester: admin._id,
+    requested: user1._id,
+    status: 1
+  })
+
+  await Factory.model('App/Models/Friendship').create({
+    requester: user2._id,
+    requested: admin._id,
+    status: 1
+  })
+
+  // Create Group
+
+  const coding = await Factory.model('App/Models/Group').create({
+    name: 'Coding Tech',
+    user_id: admin._id
+  })
+
+  await coding.users().attach([admin._id, user1._id, user2._id])
+
+  const groupInfo = await client.get(`api/groups/${coding._id}`).loginVia(admin).end()
+
+  groupInfo.assertStatus(200)
+  
+  groupInfo.assertJSONSubset({
+    group: {
+      name: coding.name,
+      user_id: ObjectId(admin._id).toString(),
+      users: [
+        { 
+          _id: ObjectId(admin._id).toString(),
+          username: admin.username
+        }, 
+        { 
+          _id: ObjectId(user1._id).toString(), 
+          username: user1.username
+        },
+        {
+          _id: ObjectId(user2._id).toString(),
+          username: user2.username
+        }
+      ]
+    },
+    friends: [
+      {
+        _id: ObjectId(user1._id).toString(),
+        username: user1.username
+      },
+      {
+        _id: ObjectId(user1._id).toString(),
+        username: user1.username
+      }
+    ] 
+  })
+
+}).timeout(0)

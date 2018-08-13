@@ -120,6 +120,27 @@ class Friend {
     }
 
 
+    Model.friends = async (currentUserId) => {
+
+      const rooms = (await Friendship.query().rooms(currentUserId).fetch()).toJSON()
+
+      let result = []
+
+      for (let room of rooms) {
+
+        (ObjectId(room.sender._id).equals(currentUserId)) ? delete room.sender: delete room.recipient
+
+        room = renameKeys(room, key => (key === 'sender' || key === 'recipient') ? 'user' : key)
+
+        result.push(room.user)
+
+      }
+
+      return result
+
+    }
+
+
   }
 
 

@@ -47,6 +47,8 @@ class User extends Model {
     return ['password']
 
   }
+  
+  
 
 }
 
