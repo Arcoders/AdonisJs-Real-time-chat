@@ -22,6 +22,16 @@ Route.group(() => {
   Route.post('auth/register', 'UserController.register').validator('RegisterUser')
   Route.post('auth/login', 'UserController.login').validator('LoginUser')
 
+}).prefix('api')
+
+
+Route.group(() => {
+
+  // Auth ---------------------------------------------------------
+
+  Route.post('auth/register', 'UserController.register').validator('RegisterUser')
+  Route.post('auth/login', 'UserController.login').validator('LoginUser')
+
   // Friendship ---------------------------------------------------------
 
   Route.post('/friends/add/:recipientId', 'FriendShipController.add')
@@ -42,11 +52,11 @@ Route.group(() => {
        
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
 
-  Route.get('groups/:groupId', 'GroupController.groupInformation')
+  Route.get('groups/:friends/:groupId?', 'GroupController.groupInformation')
        .bind('App/Models/Group', 'group', 'groupId', '_id')
 
   // Chats ---------------------------------------------------------
 
   Route.get('chats', 'ChatController.chats')
 
-}).prefix('api')
+}).prefix('api').middleware(['auth'])

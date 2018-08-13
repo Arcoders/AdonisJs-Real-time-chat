@@ -2,6 +2,7 @@
 
 const Group = use('App/Models/Group')
 const User = use('App/Models/User')
+const Authorization = use('App/Services/Authorization')
 
 class GroupController {
 
@@ -16,12 +17,12 @@ class GroupController {
     async groupInformation ({ auth, group }) {
         
         const user = await auth.getUser()
-
-        group.users = await group.users().fetch()
+        
+        if (group) group.users = await group.users().fetch()
 
         const friends = await User.friends(user._id)
 
-        return { group, friends }
+        return { friends, group }
 
     }
 
@@ -43,6 +44,8 @@ class GroupController {
         const { usersId } = request.all();
         const user = await auth.getUser()
 
+        Authorization.check(group, user)
+
         group.merge(request.only('name'))
         await group.save()
 
@@ -53,7 +56,10 @@ class GroupController {
 
     }
 
-    async destroy ({ group }) {
+    async destroy ({ group, auth }) {
+
+        const user = await auth.getUser()
+        Authorization.check(group, user)
 
         await group.users().detach()
         await group.delete()

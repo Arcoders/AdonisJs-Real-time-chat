@@ -8,7 +8,7 @@ trait('Test/ApiClient')
 trait('Auth/Client')
 
 
-test('user can delete a group', async ({ client, assert }) => {
+test('user can delete a group', async ({ client }) => {
 
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()
@@ -27,7 +27,6 @@ test('user can create a group', async ({ client }) => {
 
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()
-  const user2 = await Factory.model('App/Models/User').create()
 
   // Create group
   
@@ -72,14 +71,12 @@ test('user can edit a group', async ({ client }) => {
 
   await laravel.users().attach([admin._id, user1._id])
 
-  const group = await Group.query().where({user_id: admin._id}).first()
-
   const postData = {
     name: 'Laravel - Edited',
     usersId: [admin._id, user1._id, user2._id]
   }
 
-  const patch = await client.patch(`api/groups/${group._id}`).send(postData).loginVia(admin).end()
+  const patch = await client.patch(`api/groups/${laravel._id}`).send(postData).loginVia(admin).end()
 
   patch.assertStatus(200)
   
@@ -100,6 +97,43 @@ test('user can edit a group', async ({ client }) => {
         }
       ]
     } 
+  })
+
+})
+
+
+test('it return permission denied', async ({ client }) => {
+
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+
+  const group = await Factory.model('App/Models/Group').create({ user_id: admin._id })
+
+  const postData = { name: 'Stack' }
+
+  const patch = await client.patch(`api/groups/${group._id}`).send(postData).loginVia(user1).end()
+
+  patch.assertStatus(403)
+  
+  patch.assertJSONSubset({
+    error: 'Invalid access to resource...',
+  })
+
+})
+
+
+test('it return resource did not exists', async ({ client }) => {
+
+  const user1 = await Factory.model('App/Models/User').create()
+
+  const postData = { name: 'Adonis' }
+
+  const patch = await client.patch(`api/groups/${user1}`).send(postData).loginVia(user1).end()
+
+  patch.assertStatus(404)
+  
+  patch.assertJSONSubset({
+    error: 'the resource did not exists...',
   })
 
 })
@@ -134,7 +168,7 @@ test('get group information with users and list of friends', async ({ client }) 
 
   await coding.users().attach([admin._id, user1._id, user2._id])
 
-  const groupInfo = await client.get(`api/groups/${coding._id}`).loginVia(admin).end()
+  const groupInfo = await client.get(`api/groups/friends/${coding._id}`).loginVia(admin).end()
 
   groupInfo.assertStatus(200)
   
