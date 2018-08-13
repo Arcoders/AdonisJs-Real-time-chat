@@ -92,13 +92,7 @@ class Friend {
 
       let result = []
 
-      for (let room of rooms) {
-
-        (ObjectId(room.sender._id).equals(currentUserId)) ? delete room.sender: delete room.recipient
-
-        result.push(renameKeys(room, key => (key === 'sender' || key === 'recipient') ? 'user' : key))
-
-      }
+      for (let room of rooms)  result.push(this.changeKeys(this.removeSameUser(room, currentUserId)))
 
       return result
 
@@ -126,20 +120,26 @@ class Friend {
 
       let result = []
 
-      for (let room of rooms) {
-
-        (ObjectId(room.sender._id).equals(currentUserId)) ? delete room.sender: delete room.recipient
-
-        room = renameKeys(room, key => (key === 'sender' || key === 'recipient') ? 'user' : key)
-
-        result.push(room.user)
-
-      }
+      for (let room of rooms) result.push(this.changeKeys(this.removeSameUser(room, currentUserId)).user)
 
       return result
 
     }
 
+
+  }
+
+  changeKeys(obj) {
+
+    return renameKeys(obj, key => (key === 'sender' || key === 'recipient') ? 'user' : key)
+
+  }
+
+  removeSameUser(obj, authId) {
+
+    (ObjectId(obj.sender._id).equals(authId)) ? delete obj.sender: delete obj.recipient
+
+    return obj
 
   }
 
