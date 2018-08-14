@@ -1,9 +1,9 @@
 'use strict'
 
 const { test, trait } = use('Test/Suite')('Group')
-const ObjectId = require('mongodb').ObjectID;
+const ObjectId = use('mongodb').ObjectID;
 const Factory = use('Factory')
-const Group = use('App/Models/Group')
+
 trait('Test/ApiClient')
 trait('Auth/Client')
 

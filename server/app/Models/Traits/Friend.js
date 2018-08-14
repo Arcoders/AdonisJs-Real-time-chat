@@ -1,7 +1,7 @@
 'use strict'
-const ObjectId = require('mongodb').ObjectID;
+const ObjectId = use('mongodb').ObjectID;
 const Friendship = use('App/Models/Friendship')
-const renameKeys = require('rename-keys');
+const renameKeys = use('rename-keys');
 
 class Friend {
   register (Model, customOptions = {}) {

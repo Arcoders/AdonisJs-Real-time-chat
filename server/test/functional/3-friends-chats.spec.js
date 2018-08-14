@@ -3,7 +3,7 @@
 const { test, trait } = use('Test/Suite')('List Of Chats')
 
 const Factory = use('Factory')
-const ObjectId = require('mongodb').ObjectID;
+const ObjectId = use('mongodb').ObjectID;
 
 trait('Test/ApiClient')
 trait('Auth/Client')
