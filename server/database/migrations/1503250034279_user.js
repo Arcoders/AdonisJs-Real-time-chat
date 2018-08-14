@@ -4,13 +4,11 @@ const Schema = use('Schema')
 
 class UserSchema extends Schema {
   up () {
-    this.create('users', (table) => {
+    this.create('users', (collection) => {
       
-      table.increments()
-      table.string('username').unique()
-      table.string('email').unique()
-      table.string('password', 80)
-      table.timestamps()
+      collection.index('email', {email: 1}, {unique: true})
+      collection.index('username', {username: 1}, {unique: true})
+      collection.index('password', {password: 1})
 
     })
   }

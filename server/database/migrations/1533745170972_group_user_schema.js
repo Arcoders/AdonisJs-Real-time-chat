@@ -4,7 +4,7 @@ const Schema = use('Schema')
 
 class GroupUserSchema extends Schema {
   up () {
-    this.create('group_users', (collection) => {
+    this.create('group_user', (collection) => {
       
       collection.index('group_id', {group_id: 1})
       collection.index('user_id', {group_id: 1})
@@ -13,7 +13,7 @@ class GroupUserSchema extends Schema {
   }
 
   down () {
-    this.drop('group_users')
+    this.drop('group_user')
   }
 }
 
