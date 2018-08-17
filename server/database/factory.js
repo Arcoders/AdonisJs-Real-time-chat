@@ -53,6 +53,7 @@ Factory.blueprint('App/Models/Message', async (faker, i, data) => {
   const group_chat = (data.group_chat) ? data.group_chat : await Factory.model('App/Models/Group').create()._id
   const body = faker.sentence({ words: 5 })
   const photo = (Math.random() > 0.5) ? null : `https://picsum.photos/200/300`
+  
   return { user_id, friend_chat, group_chat, body, photo }
 
 })

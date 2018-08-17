@@ -43,17 +43,13 @@ Route.group(() => {
   
   Route.get('groups', 'GroupController.groups')
 
-  Route.patch('groups/:groupId', 'GroupController.update')
-       .validator('NewGroup')
-       .bind('App/Models/Group', 'group', 'groupId', '_id')
+  Route.patch('groups/:group', 'GroupController.update').validator('NewGroup').bind('Group')
 
-  Route.delete('groups/:groupId', 'GroupController.destroy')
-       .bind('App/Models/Group', 'group', 'groupId', '_id')     
+  Route.delete('groups/:group', 'GroupController.destroy').bind('Group')     
        
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
 
-  Route.get('groups/:friends/:groupId?', 'GroupController.groupInformation')
-       .bind('App/Models/Group', 'group', 'groupId', '_id')
+  Route.get('groups/:friends/:group?', 'GroupController.groupInformation').bind('Group')
 
   // Chats ---------------------------------------------------------
 
