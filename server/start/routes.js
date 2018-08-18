@@ -54,5 +54,7 @@ Route.group(() => {
   // Access chat ---------------------------------------------------------
 
   Route.get('group_chat/:group', 'GroupController.groupForChat').middleware(['groupMember']).bind('Group')
+  Route.get('friend_chat/:user', 'FriendShipController.userForChat').middleware(['isFriend']).bind('User')
+
 
 }).prefix('api').middleware(['auth'])

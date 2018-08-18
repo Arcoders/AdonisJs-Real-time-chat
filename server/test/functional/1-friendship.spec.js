@@ -82,3 +82,51 @@ test('user can delete a friendship', async ({ client }) => {
   res.assertJSON({ status: 'not_friends' })
 
 })
+
+
+test('Access friend room - it return access denied', async ({ client }) => {
+
+  const user1 = await Factory.model('App/Models/User').create()
+  const user2 = await Factory.model('App/Models/User').create()
+  const user3 = await Factory.model('App/Models/User').create()
+
+  Factory.model('App/Models/Friendship').create({
+    requester: user1._id,
+    requested: user2._id,
+    status: 1
+  })
+
+  const denied = await client.get(`api/friend_chat/${user3._id}`).loginVia(user1).end()
+
+  denied.assertStatus(403)
+  
+  denied.assertJSONSubset({
+    error: 'Access denied',
+  })
+
+})
+
+
+test('Access friend room - it return group information', async ({ client }) => {
+
+  const user1 = await Factory.model('App/Models/User').create()
+  const user2 = await Factory.model('App/Models/User').create()
+
+  Factory.model('App/Models/Friendship').create({
+    requester: user1._id,
+    requested: user2._id,
+    status: 1
+  })
+
+  const done = await client.get(`api/friend_chat/${user2._id}`).loginVia(user1).end()
+
+  done.assertStatus(200)
+  
+  done.assertJSONSubset({
+    user: {
+      email: user2.email,
+      username: user2.username
+    }
+  })
+
+})

@@ -206,7 +206,7 @@ test('get group information with users and list of friends', async ({ client }) 
 }).timeout(0)
 
 
-test('Access group chatBox - it return access denied', async ({ client }) => {
+test('Access group room - it return access denied', async ({ client }) => {
 
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()
@@ -226,7 +226,7 @@ test('Access group chatBox - it return access denied', async ({ client }) => {
 })
 
 
-test('Access group chatBox - it return group information', async ({ client }) => {
+test('Access group room - it return group information', async ({ client }) => {
 
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()

@@ -43,6 +43,12 @@ class FriendShipController {
         return { status }
 
     }
+
+    async userForChat({ user }) {
+
+        return { user }
+
+    }
     
 
 }
