@@ -42,17 +42,17 @@ Route.group(() => {
   // Groups ---------------------------------------------------------
   
   Route.get('groups', 'GroupController.groups')
-
   Route.patch('groups/:group', 'GroupController.update').validator('NewGroup').bind('Group')
-
   Route.delete('groups/:group', 'GroupController.destroy').bind('Group')     
-       
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
-
   Route.get('groups/:friends/:group?', 'GroupController.groupInformation').bind('Group')
 
   // Chats ---------------------------------------------------------
 
   Route.get('chats', 'ChatController.chats')
+
+  // Access chat ---------------------------------------------------------
+
+  Route.get('group_chat/:group', 'GroupController.groupForChat').middleware(['groupMember']).bind('Group')
 
 }).prefix('api').middleware(['auth'])

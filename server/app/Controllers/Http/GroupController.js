@@ -26,6 +26,12 @@ class GroupController {
 
     }
 
+    async groupForChat({ group }) {
+
+        return { group }
+
+    }
+
     async create ({ auth, request }) {
 
         const { name, avatar, usersId } = request.all();

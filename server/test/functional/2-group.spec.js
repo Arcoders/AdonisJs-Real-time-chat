@@ -102,7 +102,7 @@ test('user can edit a group', async ({ client }) => {
 })
 
 
-test('it return permission denied', async ({ client }) => {
+test('it return invalid access to resource', async ({ client }) => {
 
   const admin = await Factory.model('App/Models/User').create()
   const user1 = await Factory.model('App/Models/User').create()
@@ -204,3 +204,46 @@ test('get group information with users and list of friends', async ({ client }) 
   })
 
 }).timeout(0)
+
+
+test('Access group chatBox - it return access denied', async ({ client }) => {
+
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+
+  const group = await Factory.model('App/Models/Group').create({ user_id: admin._id })
+
+  await group.users().attach([admin._id])
+
+  const denied = await client.get(`api/group_chat/${group._id}`).loginVia(user1).end()
+
+  denied.assertStatus(403)
+  
+  denied.assertJSONSubset({
+    error: 'Access denied',
+  })
+
+})
+
+
+test('Access group chatBox - it return group information', async ({ client }) => {
+
+  const admin = await Factory.model('App/Models/User').create()
+  const user1 = await Factory.model('App/Models/User').create()
+
+  const group = await Factory.model('App/Models/Group').create({ user_id: admin._id })
+
+  await group.users().attach([admin._id, user1._id])
+
+  const done = await client.get(`api/group_chat/${group._id}`).loginVia(user1).end()
+
+  done.assertStatus(200)
+  
+  done.assertJSONSubset({
+    group: {
+      name: group.name,
+      user_id: ObjectId(admin._id).toString()
+    }
+  })
+
+})

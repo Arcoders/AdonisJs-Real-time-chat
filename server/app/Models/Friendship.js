@@ -62,12 +62,6 @@ class Friendship extends Model {
         return this.hasMany('App/Models/Message', '_id', 'friend_chat')
         
     }
-
-    msges() {
-
-      return this.morphMany('App/Models/Message', 'messageType', 'messageId')
-
-    }
     
 
 }
