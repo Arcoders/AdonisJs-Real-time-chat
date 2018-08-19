@@ -1,6 +1,7 @@
 <template lang="pug">
-  
+
   .green_background
+    router-view
 
 </template>
 
