@@ -1,7 +1,7 @@
 <template lang="pug">
 
     .auth
-        h2 Register
+        h2 Login
         .form
             input(
                 type="email"
@@ -10,25 +10,13 @@
                 @input="setEmail"
                 )
             input(
-                type="text"
-                placeholder="Username"
-                :value="username"
-                @input="setUsername"
-                )
-            input(
                 type="password"
                 placeholder="Password"
                 :value="password"
                 @input="setPassword"
                 )
-            input(
-                type="password"
-                placeholder="Confirm your password"
-                :value="confirmedPassword"
-                @input="setConfirmedPassword"
-                )
 
-            button(@click="register") Register
+            button(@click="login") Login
 
             span(:value="error") {{ error }}
 
@@ -41,26 +29,22 @@ export default {
 
   methods: {
 
-    ...mapMutations('authentication/register', [
+    ...mapMutations('authentication/login', [
       'setEmail',
-      'setUsername',
       'setPassword',
-      'setConfirmedPassword',
     ]),
 
-    ...mapActions('authentication/register', [
-      'register',
+    ...mapActions('authentication/login', [
+      'login',
     ]),
 
   },
 
   computed: {
 
-    ...mapState('authentication/register', [
+    ...mapState('authentication/login', [
       'email',
-      'username',
       'password',
-      'confirmedPassword',
       'error',
     ]),
 

@@ -2,7 +2,7 @@
 // import presistedState from 'vuex-persistedstate';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import authentication from './authentication';
+import authentication from './authentication/main';
 
 Vue.use(Vuex);
 

@@ -1,16 +1,29 @@
 <template lang="pug">
 
   .home
-    router-link(to='/register' v-if='!isLoggedIn') Register
-    span(v-if='isLoggedIn') Welcome
+    section(v-if='!isLoggedIn')
+      router-link(to='/register') Register
+      router-link(to='/login') Login
+
+    section(v-if='isLoggedIn')
+      span Welcome
+      button(@click='logout') Logout
 
 </template>
 
 <script>
 
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
+
+  methods: {
+
+    ...mapActions('authentication/logout', [
+      'logout',
+    ]),
+
+  },
 
   computed: {
 
