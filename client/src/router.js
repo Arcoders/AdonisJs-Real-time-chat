@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Home from './views/Home.vue';
 
 Vue.use(Router);
 
@@ -8,8 +7,8 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: Home,
+      name: 'landing',
+      component: () => import('./views/Landing.vue'),
     },
     {
       path: '/register',
@@ -20,6 +19,16 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: () => import('./views/Login.vue'),
+    },
+    {
+      path: '/home',
+      component: () => import('./views/Home.vue'),
+      children: [
+        {
+          path: '/',
+          component: () => import('./views/Welcome.vue'),
+        },
+      ],
     },
   ],
 });

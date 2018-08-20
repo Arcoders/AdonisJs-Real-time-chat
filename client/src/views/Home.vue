@@ -1,38 +1,25 @@
 <template lang="pug">
 
-  .home
-    section(v-if='!isLoggedIn')
-      router-link(to='/register') Register
-      router-link(to='/login') Login
+    .wrap
 
-    section(v-if='isLoggedIn')
-      span Welcome
-      button(@click='logout') Logout
+        router-link.navigate(to='#')
+            i.material-icons arrow_back
+
+        .left
+            Left
+
+        .right
+            router-view(:key='$route.fullPath')
 
 </template>
 
 <script>
 
-import { mapGetters, mapActions } from 'vuex';
+import Left from '@/components/leftSide/Left.vue';
 
 export default {
 
-  methods: {
-
-    ...mapActions('authentication/logout', [
-      'logout',
-    ]),
-
-  },
-
-  computed: {
-
-    ...mapGetters('authentication', [
-      'isLoggedIn',
-    ]),
-
-  },
+  components: { Left },
 
 };
-
 </script>

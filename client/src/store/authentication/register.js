@@ -31,9 +31,9 @@ export default {
                 password_confirmation: state.confirmedPassword
             })
             .then(({ data }) => {
-                commit('authentication/setToken', data.token, { root: true });
+                commit('authentication/setUser', data, { root: true });
                 commit('reset');
-                router.push('/');
+                router.push('/home');
             })
             .catch(error => {
                 let message = 'An error has occurred';

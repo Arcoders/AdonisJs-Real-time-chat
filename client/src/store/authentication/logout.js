@@ -9,8 +9,12 @@ export default {
     actions: {
 
         logout({ commit }) {
-            commit('authentication/setToken', null, { root: true })
-            router.push('/login');
+            const data = {
+                token: null,
+                user: null
+            };
+            commit('authentication/setUser', { data }, { root: true })
+            router.push('landing');
         }
 
     },

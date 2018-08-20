@@ -10,6 +10,7 @@ export default {
     
     state: {
         token: null,
+        user: null,
     },
 
     modules: {
@@ -19,8 +20,9 @@ export default {
     },
 
     mutations: {
-        setToken(state, token) {
-            state.token = token;
+        setUser(state, data) {
+            state.token = data.token
+            state.user = data.user;
         }
     },
 

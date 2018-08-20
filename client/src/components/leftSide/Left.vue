@@ -1,7 +1,6 @@
 <template lang="pug">
 
-  .green_background
-    router-view
+    .left_app estoy en el lado ezq...
 
 </template>
 
@@ -10,4 +9,3 @@ export default {
 
 };
 </script>
-

@@ -18,7 +18,11 @@ class UserController {
 
         const { email, password } = request.all()
 
-        return await auth.attempt(email, password)
+        const token = await auth.attempt(email, password)
+        
+        if (token) token.user = await User.query().where('email', email).first();
+        
+        return token
 
     }
 
