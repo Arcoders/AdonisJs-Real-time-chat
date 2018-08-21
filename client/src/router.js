@@ -28,6 +28,11 @@ export default new Router({
           path: '/',
           component: () => import('./views/Welcome.vue'),
         },
+        {
+          path: '/groups',
+          name: 'groups',
+          component: () => import('./views/groups/Groups.vue'),
+        },
       ],
     },
   ],

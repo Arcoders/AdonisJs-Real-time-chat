@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "array-sort": "^1.0.0",
     "axios": "^0.18.0",
     "vue": "^2.5.17",
     "vue-avatar": "^2.1.6",

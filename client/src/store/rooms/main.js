@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import Axios from '../../http';
+const arraySort = require('array-sort');
 
 export default {
 
@@ -9,8 +10,10 @@ export default {
     state: {
         friends: [],
         groups: [],
-        filteredFriends: [],
-        filteredGroups: [],
+        rooms: {
+            friends: [],
+            groups: [],
+        },
         loading: false,
     },
 
@@ -21,9 +24,7 @@ export default {
             commit('setLoading', true);
 
             return Axios().get('/chats').then(({ data }) => {
-                commit('setFriends', data.friends);
-                commit('setGroups', data.groups);
-                commit('setFiltered', data);
+                commit('setRooms', data);
                 commit('setLoading', false);
             })
             .catch(() => {
@@ -35,15 +36,15 @@ export default {
     },
 
     mutations: {
-        setFriends(state, friends) {
-            state.friends = friends;
-        },
-        setGroups(state, groups) {
-            state.groups = groups;
+        setRooms(state, data) {
+            const friends = arraySort(data.friends, 'message.created_at').reverse();
+            const groups = arraySort(data.groups, 'message.created_at').reverse();
+            
+            [state.friends, state.groups] = [friends, groups];
+            [state.rooms.friends, state.rooms.groups] = [friends, groups];
         },
         setFiltered(state, data) {
-            state.filteredFriends = data.friends;
-            state.filteredGroups = data.groups;
+            [state.rooms.friends, state.rooms.groups] = [data.friends, data.groups];
         },
         setLoading(state, boolean) {
             state.loading = boolean;

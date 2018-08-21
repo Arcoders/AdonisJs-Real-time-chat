@@ -4,7 +4,7 @@
 
         Loading(v-if='loading' :normal='true')
 
-        .contact(v-if="privateList" v-for='friend in filteredFriends')
+        .contact(v-if="privateList" v-for='friend in rooms.friends')
 
             router-link(exact-active-class='active_image' to="/")
                 Avatar.avatar(:username='friend.user.username'  :src='friend.user.avatar' color='#fff')
@@ -31,7 +31,7 @@
                 i.material-icons(v-else) fiber_new
 
 
-        .contact(v-if='!privateList' v-for='group in filteredGroups')
+        .contact(v-if='!privateList' v-for='group in rooms.groups')
 
             router-link(exact-active-class='active_image' to="/")
                 avatar.avatar(:username='group.name' :src='group.avatar' color='#fff')
@@ -89,14 +89,14 @@ export default {
 
   computed: {
 
-    ...mapState('rooms', ['filteredFriends', 'filteredGroups', 'loading']),
+    ...mapState('rooms', ['rooms', 'loading']),
 
     groupsNotFound() {
-      return (!this.privateList && this.filteredGroups && this.filteredGroups.length === 0);
+      return (!this.privateList && this.rooms.groups && this.rooms.groups.length === 0);
     },
 
     friendsNotFound() {
-      return (this.privateList && this.filteredFriends && this.filteredFriends.length === 0);
+      return (this.privateList && this.rooms.friends && this.rooms.friends.length === 0);
     },
 
   },
