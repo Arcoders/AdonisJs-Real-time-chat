@@ -17,7 +17,7 @@ Factory.blueprint('App/Models/User', (faker, i, data) => {
   
   return {
     email: (data.email) ? data.email : faker.email(),
-    username: (data.username) ? data.username : faker.username(),
+    username: (data.username) ? data.username : faker.name(),
     password: 'secret'
   }
 
@@ -49,8 +49,8 @@ Factory.blueprint('App/Models/Friendship', async (faker, i, data) => {
 Factory.blueprint('App/Models/Message', async (faker, i, data) => {
 
   const user_id =  (data.user_id) ? data.user_id : await Factory.model('App/Models/User').create()._id
-  const friend_chat = (data.friend_chat) ? data.friend_chat : await Factory.model('App/Models/Friendship').create()._id
-  const group_chat = (data.group_chat) ? data.group_chat : await Factory.model('App/Models/Group').create()._id
+  const friend_chat = (data.friend_chat) ? data.friend_chat : null
+  const group_chat = (data.group_chat) ? data.group_chat : null
   const body = faker.sentence({ words: 5 })
   const photo = (Math.random() > 0.5) ? null : `https://picsum.photos/200/300`
   

@@ -15,8 +15,10 @@ const Factory = use('Factory')
 class UserSeeder {
   async run () {
     
+    // .................................................................
+
     const ismael = await Factory.model('App/Models/User').create({
-      email: 'Arcoder@gmail.com',
+      email: 'Arcoders@gmail.com',
       username: 'Ismael Haytam'
     })
 
@@ -48,6 +50,33 @@ class UserSeeder {
       requested: marta._id,
       status: 0
     })
+
+    // ..................................................................
+
+    const users = await Factory.model('App/Models/User').createMany(15)
+
+    for (const user of users) {
+
+      const group = await Factory.model('App/Models/Group').create({
+        user_id: user._id
+      })
+
+      await group.users().attach([user._id, ismael._id])
+
+      const friendship = await Factory.model('App/Models/Friendship').create({
+        requester: ismael._id,
+        requested: user._id,
+        status: 1
+      })
+
+      await Factory.model('App/Models/Message').createMany(5, {
+        user_id: (Math.random() > 0.5) ? ismael._id : user._id,
+        friend_chat: friendship._id,
+      })
+      
+    }
+
+    // ....................................................................
 
     const arcoders = await Factory.model('App/Models/Group').create({
       name: 'Arcoders',
@@ -85,34 +114,6 @@ class UserSeeder {
     })
 
     await tecno.users().attach([marta._id, ismael._id])
-
-    const users = await Factory.model('App/Models/User').createMany(10)
-
-    users.forEach(async user => {
-    
-      const group = await Factory.model('App/Models/Group').create({
-        user_id: user._id
-      })
-
-      await group.users().attach([user._id, ismael._id])
-
-      const friends = await Factory.model('App/Models/Friendship').createMany(5, {
-        requester: ismael._id,
-        requested: user._id,
-        status: 1
-      })
-
-      friends.forEach(async friend => {
-
-        await Factory.model('App/Models/Message').createMany(5, {
-          user_id: (Math.random() > 0.5) ? ismael._id : user._id,
-          friend_chat: friend._id,
-        })
-
-      })
-
-
-    });
 
   }
 }

@@ -14,7 +14,7 @@ export default {
                 user: null
             };
             commit('authentication/setUser', { data }, { root: true })
-            router.push('landing');
+            router.push('/');
         }
 
     },
