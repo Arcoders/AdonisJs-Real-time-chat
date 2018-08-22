@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Axios from '../../http';
+import Axios from '@/plugins/http';
 import EventBus from '@/plugins/eventBus';
 
 export default {
@@ -68,7 +68,7 @@ export default {
 
     getters: {
         notFound(state) {
-            return (!state.groups  || state.groups.data.length === 0);
+            return (state.groups.data.length === 0);
         }
     },
 

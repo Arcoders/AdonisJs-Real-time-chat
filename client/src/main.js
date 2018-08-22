@@ -2,6 +2,7 @@
 import { sync } from 'vuex-router-sync';
 import VueTruncate from 'vue-truncate-filter';
 import Avatar from 'vue-avatar';
+import Multiselect from 'vue-multiselect';
 import VueMoment from 'vue-moment';
 import Snotify, { SnotifyPosition } from 'vue-snotify';
 import Vue from 'vue';
@@ -24,6 +25,7 @@ Vue.use(Snotify, snotifyOptions);
 
 Vue.component('Avatar', Avatar);
 Vue.component('Loading', Loading);
+Vue.component('multiselect', Multiselect);
 
 Vue.config.productionTip = false;
 Vue.prototype.$eventBus = new Vue();

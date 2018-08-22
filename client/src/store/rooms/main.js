@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Axios from '../../http';
+import Axios from '@/plugins/http';
 const arraySort = require('array-sort');
 
 export default {

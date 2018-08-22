@@ -1,13 +1,15 @@
 /* eslint-disable */
 
-import listGroups from './listGroups';
+import list from './list';
+import add from './add';
 
 export default {
 
     namespaced: true,
 
     modules: {
-        listGroups,
+        list,
+        add,
     },
 
 }

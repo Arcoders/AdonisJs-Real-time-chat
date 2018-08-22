@@ -29,24 +29,15 @@ export default {
 
   methods: {
 
-    ...mapMutations('authentication/login', [
-      'setEmail',
-      'setPassword',
-    ]),
+    ...mapMutations('authentication/login', ['setEmail', 'setPassword']),
 
-    ...mapActions('authentication/login', [
-      'login',
-    ]),
+    ...mapActions('authentication/login', ['login']),
 
   },
 
   computed: {
 
-    ...mapState('authentication/login', [
-      'email',
-      'password',
-      'error',
-    ]),
+    ...mapState('authentication/login', ['email', 'password', 'error']),
 
   },
 

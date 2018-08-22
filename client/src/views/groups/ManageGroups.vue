@@ -72,7 +72,7 @@ export default {
 
   methods: {
 
-    ...mapActions('groups/listGroups', ['listGroups', 'deleteGroup']),
+    ...mapActions('groups/list', ['listGroups', 'deleteGroup']),
 
     changePage(number) {
       this.listGroups(number);
@@ -82,9 +82,9 @@ export default {
 
   computed: {
 
-    ...mapState('groups/listGroups', ['groups', 'loading', 'errorLoad']),
+    ...mapState('groups/list', ['groups', 'loading', 'errorLoad']),
 
-    ...mapGetters('groups/listGroups', ['notFound']),
+    ...mapGetters('groups/list', ['notFound']),
 
 
   },

@@ -1,7 +1,7 @@
 /* eslint-disable */
 
-import Axios from '../../http';
-import router from '../../router';
+import Axios from '@/plugins/http';
+import router from '@/router';
 
 export default {
 

@@ -38,6 +38,11 @@ export default new Router({
               name: 'manage',
               component: () => import('./views/groups/ManageGroups.vue'),
             },
+            {
+              path: 'add',
+              name: 'addGroup',
+              component: () => import('./views/groups/AddGroup.vue'),
+            },
           ],
         },
       ],
