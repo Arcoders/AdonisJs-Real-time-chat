@@ -1,5 +1,5 @@
 <template lang="pug">
-    
+
     .manage_groups
 
         .head
@@ -14,7 +14,7 @@
 
         .groups_box
 
-            .content 
+            .content
 
                 .groups(v-if="$route.name == 'groups'")
 
@@ -22,7 +22,7 @@
                         router-link(to="groups/add") Add Group
 
                     .group
-                        router-link(to="groups/all") My Groups
+                        router-link(to="groups/manage") My Groups
 
                 router-view
 
@@ -30,6 +30,6 @@
 
 <script>
 export default {
-    
-}
+
+};
 </script>

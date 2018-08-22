@@ -14,6 +14,7 @@
     "vue-avatar": "^2.1.6",
     "vue-moment": "^4.0.0",
     "vue-router": "^3.0.1",
+    "vue-snotify": "^3.2.1",
     "vue-truncate-filter": "^1.1.7",
     "vuex": "^3.0.1",
     "vuex-persistedstate": "^2.5.4",

@@ -6,11 +6,11 @@ const Authorization = use('App/Services/Authorization')
 
 class GroupController {
 
-    async groups ({ auth }) {
+    async groups ({ auth, request }) {
 
         const user = await auth.getUser()
 
-        return await Group.query().where({ user_id: user._id }).with('users').paginate(1, 3)
+        return await Group.query().where({ user_id: user._id }).with('users').paginate(request.input('page'), 3)
 
     }
 

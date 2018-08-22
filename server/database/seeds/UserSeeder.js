@@ -69,6 +69,7 @@ class UserSeeder {
         status: 1
       })
 
+      
       await Factory.model('App/Models/Message').createMany(5, {
         user_id: (Math.random() > 0.5) ? ismael._id : user._id,
         friend_chat: friendship._id,

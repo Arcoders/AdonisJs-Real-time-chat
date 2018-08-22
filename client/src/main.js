@@ -3,6 +3,7 @@ import { sync } from 'vuex-router-sync';
 import VueTruncate from 'vue-truncate-filter';
 import Avatar from 'vue-avatar';
 import VueMoment from 'vue-moment';
+import Snotify, { SnotifyPosition } from 'vue-snotify';
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
@@ -12,6 +13,14 @@ import './assets/sass/app.scss';
 
 Vue.use(VueTruncate);
 Vue.use(VueMoment);
+
+const snotifyOptions = {
+  toast: {
+    position: SnotifyPosition.rightTop,
+  },
+};
+
+Vue.use(Snotify, snotifyOptions);
 
 Vue.component('Avatar', Avatar);
 Vue.component('Loading', Loading);

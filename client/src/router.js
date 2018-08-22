@@ -32,6 +32,13 @@ export default new Router({
           path: '/groups',
           name: 'groups',
           component: () => import('./views/groups/Groups.vue'),
+          children: [
+            {
+              path: 'manage',
+              name: 'manage',
+              component: () => import('./views/groups/ManageGroups.vue'),
+            },
+          ],
         },
       ],
     },
