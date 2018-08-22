@@ -11,7 +11,7 @@
                 a(@click="navigate(page)", :class="{ current: source.page == page }") {{ page }}
 
             li
-                a.next(@click="nextPrev(Number(source.page) + 1)", :class="{ disable: source.page == source.lastPage }") »
+                a.next(@click="nextPrev(Number(source.page) + 1)", :class="{ disable: source.page == source.lastPage + 1 }") »
 
 </template>
 
@@ -28,7 +28,7 @@ export default {
 
   watch: {
     source() {
-      this.pages = Array(...{ length: this.source.lastPage }).map((value, index) => index + 1);
+      this.pages = Array.apply(null, { length: this.source.lastPage }).map((value, index) => index + 1);
     },
   },
 

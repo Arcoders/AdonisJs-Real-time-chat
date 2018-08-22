@@ -20,6 +20,8 @@ export default {
             commit('setLoading', true);
             commit('setErrorLoad', false);
 
+            page = (page === 0) ? 1 : page;
+
             return Axios().get(`/groups?page=${page}`).then(({ data }) => {
                 commit('setGroups', data);
                 commit('setLoading', false);
@@ -31,13 +33,15 @@ export default {
 
         },
 
-        deleteGroup({ commit }, groupId) {
+        deleteGroup({ state, commit, dispatch }, groupId) {
 
             commit('setLoading', true);
             commit('setErrorLoad', false);
 
             return Axios().delete(`/groups/${groupId}`).then(({ data }) => {
                 commit('setLoading', false);
+                const page = (state.groups.data.length === 1) ? state.groups.page - 1 : state.groups.page;
+                dispatch('listGroups', page);
                 EventBus.$emit('snotifyDone', data.status);
             })
             .catch(() => {
@@ -64,7 +68,7 @@ export default {
 
     getters: {
         notFound(state) {
-            return (!state.groups  || state.groups.length === 0);
+            return (!state.groups  || state.groups.data.length === 0);
         }
     },
 

@@ -12,7 +12,7 @@
             h4 My Groups
 
                 router-link(to="/groups/add")
-                    i.add.material-icons add
+                    i.add.material-icons add 
 
             hr
 
@@ -20,7 +20,7 @@
 
             thead
                 tr
-                    th Avatar
+                    th Avatar 
                     th Name
                     th Edit
                     th Status
@@ -35,6 +35,7 @@
                 tr(v-else-if="notFound")
                     td(colspan='4') No records found, please
                         router-link.green.link_add(to="/groups/add") Add Groups
+                        
 
                 tr.data(v-else v-for='(group, index) in groups.data')
 
