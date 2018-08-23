@@ -2,6 +2,7 @@
 
 import list from './list';
 import add from './add';
+import edit from './edit';
 
 export default {
 
@@ -10,6 +11,7 @@ export default {
     modules: {
         list,
         add,
+        edit,
     },
 
 }

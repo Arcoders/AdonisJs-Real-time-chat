@@ -17,34 +17,35 @@ export default {
 
     actions: {
 
-        getFriends({ commit, rootGetters }) {
+        getGroup({ commit, rootGetters }, groupId) {
 
             commit('setLoading', true);
             const userId = rootGetters['authentication/userId'];
-
-            return Axios().get(`/groups/${userId}`).then(({ data }) => {
+            
+            return Axios().get(`/groups/${userId}/${groupId}`).then(({ data }) => {
                 commit('setFriends', data.friends);
+                commit('setGroupInformation', data.group);
                 commit('setLoading', false);
             })
             .catch(() => {
-                EventBus.$emit('snotifyError', 'Could not load friend list');
+                EventBus.$emit('snotifyError', 'Could not load group Infomation');
                 commit('setLoading', false);
             })   
 
         },
 
-        addGroup({ commit, state }) {
+        saveGroup({ commit, state }, groupId) {
 
             commit('setLoading', true);
 
-            return Axios().post('/groups/create', {
+            return Axios().patch(`/groups/${groupId}`, {
                 name: state.groupName,
                 usersId: state.selectedIds,
                 avatar: state.avatar,
             })
             .then(({ data }) => {
+                console.log(data)
                 commit('setLoading', false);
-                commit('reset');
                 EventBus.$emit('snotifyDone', data.status);
             })
             .catch(error => {
@@ -76,11 +77,10 @@ export default {
         setLoading(state, boolean) {
             state.loading = boolean;
         },
-        reset(state) {
-            state.groupName = '';
-            state.selectedIds = [];
-            state.avatar = null;
-            state.selectedUsers = [];
+        setGroupInformation(state, group) {
+            state.groupName = group.name;
+            state.avatar = group.avatar;
+            state.selectedUsers = group.users;
         },
     },
 

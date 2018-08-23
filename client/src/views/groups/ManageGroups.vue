@@ -45,7 +45,7 @@
                     td {{ group.name }}
 
                     td
-                        router-link(to="/")
+                        router-link(:to="linkEdit(group)")
                             i.material-icons.green mode_edit
 
                     td
@@ -77,6 +77,16 @@ export default {
     changePage(number) {
       this.listGroups(number);
     },
+
+    linkEdit(group) {
+        return {
+            name: 'editGroup',
+            params: {
+                groupId: window.btoa(group._id),
+                groupName: group.name
+            }
+        }
+    }
 
   },
 

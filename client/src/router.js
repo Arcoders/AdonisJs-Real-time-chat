@@ -43,6 +43,11 @@ export default new Router({
               name: 'addGroup',
               component: () => import('./views/groups/AddGroup.vue'),
             },
+            {
+              path: 'edit/:groupId/:groupName',
+              name: 'editGroup',
+              component: () => import('./views/groups/EditGroup.vue'),
+            },
           ],
         },
       ],
