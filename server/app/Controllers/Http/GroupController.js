@@ -53,9 +53,13 @@ class GroupController {
         Authorization.check(group, user)
 
         group.merge(request.only('name'))
+        
         await group.save()
 
         usersId.push(user._id)
+
+        await group.users().where('group_id', group._id).delete()
+
         group.users = await group.users().attach(usersId)
 
         return { status: 'Group updated successfully', group }
@@ -67,7 +71,7 @@ class GroupController {
         const user = await auth.getUser()
         Authorization.check(group, user)
 
-        await group.users().detach()
+        await group.users().where('group_id', group._id).delete()
         await group.delete()
 
         return { status: 'Group deleted successfully' }
