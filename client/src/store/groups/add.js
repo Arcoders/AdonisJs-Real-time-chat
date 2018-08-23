@@ -20,7 +20,6 @@ export default {
         getFriends({ commit, rootGetters }) {
 
             commit('setLoading', true);
-
             const userId = rootGetters['authentication/userId'];
 
             return Axios().get(`/groups/${userId}`).then(({ data }) => {
@@ -32,6 +31,31 @@ export default {
                 commit('setLoading', false);
             })   
 
+        },
+
+        addGroup({ commit, state }) {
+
+            commit('setLoading', true);
+
+            return Axios().post('/groups/create', {
+                name: state.groupName,
+                usersId: state.selectedIds,
+                avatar: state.avatar,
+            })
+            .then(({ data }) => {
+                commit('setLoading', false);
+                commit('reset');
+                EventBus.$emit('snotifyDone', data.status);
+            })
+            .catch(error => {
+                commit('setLoading', false);
+                let message = 'An error has occurred';
+                if (error.response.status === 422) {
+                    message = error.response.data.shift().message;
+                    return EventBus.$emit('snotifyWarning', message);
+                }
+                EventBus.$emit('snotifyError', message);
+            })   
         },
 
     },
@@ -51,6 +75,12 @@ export default {
         },
         setLoading(state, boolean) {
             state.loading = boolean;
+        },
+        reset(state) {
+            state.groupName = '';
+            state.selectedIds = [];
+            state.avatar = null;
+            state.selectedUsers = [];
         }
     },
 
@@ -58,6 +88,9 @@ export default {
         highlightAvatar(state) {
             return (state.groupName === '') ? '#EEEEEE' : '';
         },
+        buttonDisabled(state) {
+            return (state.groupName.length < 3);
+        }
     }
 
 

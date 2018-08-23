@@ -27,6 +27,7 @@ export default {
   created() {
     this.snotifyDone();
     this.snotifyError();
+    this.snotifyWarning()
   },
 
   methods: {
@@ -35,6 +36,9 @@ export default {
     },
     snotifyError() {
       EventBus.$on('snotifyError', msg => this.$snotify.error(msg, 'Oups'));
+    },
+    snotifyWarning() {
+      EventBus.$on('snotifyWarning', msg => this.$snotify.warning(msg, 'Validation'));
     },
   },
 

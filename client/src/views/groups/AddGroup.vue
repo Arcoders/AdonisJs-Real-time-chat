@@ -4,7 +4,7 @@
 
         .data
 
-            router-link(to="/groups/all")
+            router-link(to="/groups/manage")
                 i.material-icons arrow_back
 
             avatar.avatar(
@@ -41,14 +41,14 @@
                 )
 
             input.input_name(
-            name="name"
-            type="text"
-            placeholder="Group name..."
-            :value="groupName"
-            @input="setGroupName"
+                name="name"
+                type="text"
+                placeholder="Group name..."
+                :value="groupName"
+                @input="setGroupName"
             )
 
-            button.button_send(type='button') Create
+            button.button_send(type='button' @click="addGroup" v-bind:disabled="buttonDisabled") Create
 
 
         multiselect(
@@ -78,13 +78,13 @@ export default {
 
     watch: {
         selectedUsers(value) {
-            this.setSelectedIds(value.map(obj => obj.id));
+            this.setSelectedIds(value.map(obj => obj._id));
         }
     },
 
     methods: {
 
-        ...mapActions('groups/add', ['getFriends']),
+        ...mapActions('groups/add', ['getFriends', 'addGroup']),
         ...mapMutations('groups/add', [
             'setSelectedUsers',
             'setGroupName',
@@ -102,7 +102,7 @@ export default {
             'loading',
             'selectedUsers'
             ]),
-        ...mapGetters('groups/add', ['highlightAvatar']),
+        ...mapGetters('groups/add', ['highlightAvatar', 'buttonDisabled']),
 
     }
 
