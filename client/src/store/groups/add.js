@@ -13,6 +13,7 @@ export default {
         friends: [],
         selectedUsers: [],
         selectedIds: [],
+        loading: false,
     },
 
     actions: {

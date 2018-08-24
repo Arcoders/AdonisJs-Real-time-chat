@@ -16,8 +16,6 @@ class Group extends Model {
     
     }
 
-
-
 }
 
 module.exports = Group

@@ -41,9 +41,9 @@ class GroupController {
         const group = await Group.create({ name, avatar, user_id: user._id })
 
         usersId.push(user._id)
-        group.users = await group.users().attach(usersId)
+        group.users = await group.users().attach(usersId.map(userId => ObjectId(userId)))
 
-        Event.fire('group', user)
+        this.notifyUsers(usersId)
 
         return { status: 'Group created successfully', group }
 
@@ -51,21 +51,22 @@ class GroupController {
 
     async update ({ auth, request, group }) {
 
-        const { usersId } = request.all();
+        let { usersId } = request.all();
         const user = await auth.getUser()
 
         Authorization.check(group, user)
 
         group.merge(request.only('name'))
-        
         await group.save()
 
         usersId.push(user._id)
+        usersId = usersId.map(userId => ObjectId(userId))
 
+        let old = await group.users().pivotQuery().where('group_id', group._id).pluck('user_id');
         await group.users().pivotQuery().where('group_id', group._id).delete()
-        group.users = await group.users().attach(usersId.map(userId => ObjectId(userId)))
+        group.users = await group.users().attach(usersId)
 
-        Event.fire('group', user)
+        this.notifyEditedUsers(old, usersId);
 
         return { status: 'Group updated successfully', group }
 
@@ -76,13 +77,30 @@ class GroupController {
         const user = await auth.getUser()
         Authorization.check(group, user)
 
+        const usersId = await group.users().pivotQuery().where('group_id', group._id).pluck('user_id');
         await group.users().pivotQuery().where('group_id', group._id).delete()
         await group.delete()
 
-        Event.fire('group', user)
+        this.notifyUsers(usersId)
 
         return { status: 'Group deleted successfully' }
 
+    }
+
+    async notifyEditedUsers(old, news) {
+        
+        news = news.map(a => ObjectId(a).toString())
+
+        old = old.map(a => ObjectId(a).toString())
+
+        const allUsers = old.filter(x => !news.includes(x)).concat(news);
+
+        for (const userId of allUsers) await Event.fire('group', userId)
+    
+    }
+
+    async notifyUsers(usersId) {
+        for (const userId of usersId) await Event.fire('group', userId)
     }
 
 }

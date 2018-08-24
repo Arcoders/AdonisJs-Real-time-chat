@@ -26,7 +26,6 @@
     "@adonisjs/lucid": "^5.0.4",
     "@adonisjs/validator": "^5.0.3",
     "@adonisjs/vow": "^1.0.16",
-    "adonis-pusher": "^1.0.3",
     "lucid-mongo": "^3.1.0",
     "pusher": "^2.1.3",
     "rename-keys": "^2.0.1",

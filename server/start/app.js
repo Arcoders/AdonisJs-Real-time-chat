@@ -20,7 +20,6 @@ const providers = [
   '@adonisjs/validator/providers/ValidatorProvider',
   '@adonisjs/vow/providers/VowProvider',
   'route-model-binding-adonisjs/providers/RMBProvider',
-  'adonis-pusher/providers/Pusher',
 ]
 
 /*

@@ -10,6 +10,6 @@ const pusher = new Pusher({
   encrypted: true,
 });
 
-Event.on('group', async (user) => {
-  pusher.trigger(`user${user._id}`, 'refreshList', { type: 'group' });
+Event.on('group', async (userId) => {
+  pusher.trigger(`user${userId}`, 'refreshList', { type: 'group' });
 })

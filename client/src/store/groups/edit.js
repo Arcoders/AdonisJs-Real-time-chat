@@ -13,15 +13,17 @@ export default {
         friends: [],
         selectedUsers: [],
         selectedIds: [],
+        loading: false,
     },
 
     actions: {
 
-        getGroup({ commit }, groupId) {
+        getGroup({ commit, rootState }, groupId) {
 
             commit('setLoading', true);
             
             return Axios().get(`/groups/friends/${groupId}?with=friends`).then(({ data }) => {
+                data.group.users = data.group.users.filter(u => u._id !== rootState.authentication.user._id)
                 commit('setFriends', data.friends);
                 commit('setGroupInformation', data.group);
                 commit('setLoading', false);
