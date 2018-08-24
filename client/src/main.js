@@ -4,6 +4,7 @@ import VueTruncate from 'vue-truncate-filter';
 import Avatar from 'vue-avatar';
 import Multiselect from 'vue-multiselect';
 import VueMoment from 'vue-moment';
+import VuePusher from 'vue-pusher';
 import Snotify, { SnotifyPosition } from 'vue-snotify';
 import Vue from 'vue';
 import App from './App.vue';
@@ -22,6 +23,14 @@ const snotifyOptions = {
 };
 
 Vue.use(Snotify, snotifyOptions);
+
+Vue.use(VuePusher, {
+  api_key: '60efd870de38efff2291',
+  options: {
+    cluster: 'eu',
+    encrypted: true,
+  },
+});
 
 Vue.component('Avatar', Avatar);
 Vue.component('Loading', Loading);

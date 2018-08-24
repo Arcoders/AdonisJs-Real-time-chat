@@ -68,7 +68,7 @@ export default {
 
     getters: {
         notFound(state) {
-            return (state.groups.data.length === 0);
+            return (state.groups.data && state.groups.data.length === 0);
         }
     },
 

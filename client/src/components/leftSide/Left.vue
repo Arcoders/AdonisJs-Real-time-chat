@@ -21,8 +21,8 @@
         Search
 
         .filter
-            button(@click="toggleList()", v-bind:class="{ active: privateList }") Private
-            button(@click="toggleList()", v-bind:class="{ active: !privateList }") Groups
+            button(@click="toggle", v-bind:class="{ active: privateList }") Private
+            button(@click="toggle", v-bind:class="{ active: !privateList }") Groups
 
         List(:privateList="privateList")
 
@@ -40,28 +40,19 @@ export default {
 
   created() {
     this.chats();
-    this.$eventBus.$on('filter', data => this.toggleList(data));
-  },
-
-  data() {
-    return {
-      privateList: true,
-    };
+    this.$eventBus.$on('filter', data => this.toggle(data.type));
+    this.$pusher.subscribe(`user${this.user._id}`).bind('refreshList', data => this.changeTo(data));
   },
 
   methods: {
     ...mapActions('authentication/logout', ['logout']),
-    ...mapActions('rooms', ['chats']),
-
-    toggleList(filtred = null) {
-      if (!filtred) return this.privateList = !this.privateList;
-      (filtred.type === 'private') ? this.privateList = true : this.privateList = false;
-    },
+    ...mapActions('rooms', ['chats', 'toggle', 'changeTo']),
 
   },
 
   computed: {
     ...mapState('authentication', ['user']),
+    ...mapState('rooms', ['privateList']),
   },
 
 };

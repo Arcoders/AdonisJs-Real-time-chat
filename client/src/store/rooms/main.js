@@ -8,6 +8,7 @@ export default {
     namespaced: true,
 
     state: {
+        privateList: true,
         friends: [],
         groups: [],
         rooms: {
@@ -33,6 +34,16 @@ export default {
 
         },
 
+        toggle({ state, commit }) {
+            commit('setPrivateList', !state.privateList)
+        },
+
+        changeTo({ commit, dispatch }, data) {
+            dispatch('chats');
+            if (data.type === 'private') return commit('setPrivateList', true);
+            if (data.type === 'group') return commit('setPrivateList', false);
+        }
+
     },
 
     mutations: {
@@ -48,6 +59,9 @@ export default {
         },
         setLoading(state, boolean) {
             state.loading = boolean;
+        },
+        setPrivateList(state, boolean) {
+            state.privateList = boolean;
         },
     },
 

@@ -45,7 +45,7 @@ Route.group(() => {
   Route.patch('groups/:group', 'GroupController.update').validator('NewGroup').bind('Group')
   Route.delete('groups/:group', 'GroupController.destroy').bind('Group')     
   Route.post('groups/create', 'GroupController.create').validator('NewGroup')
-  Route.get('groups/:friends/:group?', 'GroupController.groupInformation').bind('Group')
+  Route.get('groups/friends/:group?', 'GroupController.groupInformation').bind('Group')
 
   // Chats ---------------------------------------------------------
 

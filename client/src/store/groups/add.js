@@ -17,12 +17,11 @@ export default {
 
     actions: {
 
-        getFriends({ commit, rootGetters }) {
+        getFriends({ commit }) {
 
             commit('setLoading', true);
-            const userId = rootGetters['authentication/userId'];
 
-            return Axios().get(`/groups/${userId}`).then(({ data }) => {
+            return Axios().get(`/groups/friends`).then(({ data }) => {
                 commit('setFriends', data.friends);
                 commit('setLoading', false);
             })

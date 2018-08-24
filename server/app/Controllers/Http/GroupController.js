@@ -2,6 +2,8 @@
 
 const Group = use('App/Models/Group')
 const User = use('App/Models/User')
+const Event = use('Event')
+const ObjectId = use('mongodb').ObjectID;
 const Authorization = use('App/Services/Authorization')
 
 class GroupController {
@@ -41,6 +43,8 @@ class GroupController {
         usersId.push(user._id)
         group.users = await group.users().attach(usersId)
 
+        Event.fire('group', user)
+
         return { status: 'Group created successfully', group }
 
     }
@@ -58,9 +62,10 @@ class GroupController {
 
         usersId.push(user._id)
 
-        await group.users().where('group_id', group._id).delete()
+        await group.users().pivotQuery().where('group_id', group._id).delete()
+        group.users = await group.users().attach(usersId.map(userId => ObjectId(userId)))
 
-        group.users = await group.users().attach(usersId)
+        Event.fire('group', user)
 
         return { status: 'Group updated successfully', group }
 
@@ -71,8 +76,10 @@ class GroupController {
         const user = await auth.getUser()
         Authorization.check(group, user)
 
-        await group.users().where('group_id', group._id).delete()
+        await group.users().pivotQuery().where('group_id', group._id).delete()
         await group.delete()
+
+        Event.fire('group', user)
 
         return { status: 'Group deleted successfully' }
 

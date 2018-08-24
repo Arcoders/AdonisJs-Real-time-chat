@@ -17,12 +17,11 @@ export default {
 
     actions: {
 
-        getGroup({ commit, rootGetters }, groupId) {
+        getGroup({ commit }, groupId) {
 
             commit('setLoading', true);
-            const userId = rootGetters['authentication/userId'];
             
-            return Axios().get(`/groups/${userId}/${groupId}`).then(({ data }) => {
+            return Axios().get(`/groups/friends/${groupId}?with=friends`).then(({ data }) => {
                 commit('setFriends', data.friends);
                 commit('setGroupInformation', data.group);
                 commit('setLoading', false);
@@ -44,7 +43,6 @@ export default {
                 avatar: state.avatar,
             })
             .then(({ data }) => {
-                console.log(data)
                 commit('setLoading', false);
                 EventBus.$emit('snotifyDone', data.status);
             })

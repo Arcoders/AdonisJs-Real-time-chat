@@ -34,7 +34,7 @@ export default {
             return state.user;
         },
         userId(state) {
-            return state.user._id;
+            if (state.user) return state.user._id;
         }
     }
 
