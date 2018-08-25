@@ -18,7 +18,9 @@ Factory.blueprint('App/Models/User', (faker, i, data) => {
   return {
     email: (data.email) ? data.email : faker.email(),
     username: (data.username) ? data.username : faker.name(),
-    password: 'secret'
+    password: 'secret',
+    description: faker.sentence({ words: 5 }),
+    avatar: (data.withoutAvatar) ? null : `https://api.adorable.io/avatars/285/${faker.last()}.png`,
   }
 
 })

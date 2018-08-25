@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import authentication from './authentication/main';
 import rooms from './rooms/main';
 import groups from './groups/main';
+import profile from './profile/main';
 
 Vue.use(Vuex);
 
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     authentication,
     rooms,
     groups,
+    profile,
   },
   mutations: {
 

@@ -26,6 +26,14 @@ class UserController {
 
     }
 
+    async users ({ auth }) {
+
+        const user = await auth.getUser()
+
+        return await User.query().whereNotIn('_id', [user._id]).limit(20).fetch()
+
+    }
+
 }
 
 module.exports = UserController

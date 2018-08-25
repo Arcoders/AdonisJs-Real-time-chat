@@ -29,6 +29,11 @@ export default new Router({
           component: () => import('./views/Welcome.vue'),
         },
         {
+          path: '/profile/:profileId?',
+          name: 'profile',
+          component: () => import('./views/profile/Profile.vue'),
+        },
+        {
           path: '/groups',
           name: 'groups',
           component: () => import('./views/groups/Groups.vue'),

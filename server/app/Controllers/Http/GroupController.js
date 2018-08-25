@@ -12,7 +12,7 @@ class GroupController {
 
         const user = await auth.getUser()
 
-        return await Group.query().where({ user_id: user._id }).with('users').paginate(request.input('page'), 3)
+        return await Group.query().where({ user_id: user._id }).paginate(request.input('page'), 3)
 
     }
 

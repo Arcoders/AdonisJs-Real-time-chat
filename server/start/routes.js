@@ -27,11 +27,13 @@ Route.group(() => {
 
 Route.group(() => {
 
-  // Auth ---------------------------------------------------------
+  // Profile ---------------------------------------------------------
 
-  Route.post('auth/register', 'UserController.register').validator('RegisterUser')
-  Route.post('auth/login', 'UserController.login').validator('LoginUser')
+  Route.get('/profile', 'UserController.users')
+  Route.patch('/profile', 'UserController.edit')
+  Route.get('/profile/:users', 'UserController.user').bind('User')
 
+  
   // Friendship ---------------------------------------------------------
 
   Route.post('/friends/add/:recipientId', 'FriendShipController.add')

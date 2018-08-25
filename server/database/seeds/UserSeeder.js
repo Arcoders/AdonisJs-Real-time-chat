@@ -19,17 +19,20 @@ class UserSeeder {
 
     const ismael = await Factory.model('App/Models/User').create({
       email: 'Arcoders@gmail.com',
-      username: 'Ismael Haytam'
+      username: 'Ismael Haytam',
+      withoutAvatar: true,
     })
 
     const marta = await Factory.model('App/Models/User').create({
       email: 'Marta@gmail.com',
-      username: 'Marta Lopez'
+      username: 'Marta Lopez',
+      withoutAvatar: true,
     })
 
     const victor = await Factory.model('App/Models/User').create({
       email: 'Victor@gmail.com',
-      username: 'Victor Crack'
+      username: 'Victor Crack',
+      withoutAvatar: true,
     })
 
     
