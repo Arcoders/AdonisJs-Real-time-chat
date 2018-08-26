@@ -23,6 +23,16 @@ export default {
         setUser(state, data) {
             state.token = data.token
             state.user = data.user;
+            localStorage.setItem('FreezedUser', JSON.stringify(data.user));
+        },
+        setUsername(state, e) {
+            state.user.username = e.target.value;
+        },
+        setDescription(state, e) {
+            state.user.description = e.target.value;
+        },
+        resetUser(state) {
+            state.user = JSON.parse(localStorage.getItem('FreezedUser'));
         }
     },
 

@@ -32,6 +32,13 @@ export default new Router({
           path: '/profile/:profileId?',
           name: 'profile',
           component: () => import('./views/profile/Profile.vue'),
+          children: [
+            {
+              path: 'edit',
+              name: 'editProfile',
+              component: () => import('./views/profile/EditProfile.vue'),
+            },
+          ],
         },
         {
           path: '/groups',

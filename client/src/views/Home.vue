@@ -17,12 +17,19 @@
 
 <script>
 
+import {  mapState, mapMutations } from 'vuex';
 import Left from '@/components/leftSide/Left.vue';
 import EventBus from '@/plugins/eventBus';
 
 export default {
 
   components: { Left },
+
+  watch: {
+    '$route' (to, from) {
+        if (from.name === 'editProfile') this.resetUser();
+    },
+  },
 
   created() {
     this.snotifyDone();
@@ -40,7 +47,7 @@ export default {
     snotifyWarning() {
       EventBus.$on('snotifyWarning', msg => this.$snotify.warning(msg, 'Validation'));
     },
+    ...mapMutations('authentication', ['resetUser']),
   },
-
 };
 </script>
