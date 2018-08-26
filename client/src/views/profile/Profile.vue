@@ -25,6 +25,8 @@
                             img(v-if="userProfile.cover" :src="userProfile.cover")
                             img(v-else, :src="defaultCover")
 
+                            friendship(v-if="!isAuthenticatedUser" :profileUserId="userProfile._id")
+
                         avatar.photo(:username="userProfile.username", color="#fff", :src="userProfile.avatar", :size="100")
 
                         h1 {{ userProfile.username }}
@@ -58,9 +60,12 @@
 <script>
  
 import { mapActions, mapState, mapMutations, mapGetters } from 'vuex';
+import Friendship from '@/components/rightSide/friends/friendship.vue';
 
 export default {
     
+    components: { Friendship },
+
     created() {
         this.getUsers();
         this.setUserProfile(this.user);

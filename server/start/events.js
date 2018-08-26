@@ -8,8 +8,18 @@ const pusher = new Pusher({
   secret: Env.get('PUSHER_SECRET_KEY', ''),
   cluster: 'eu',
   encrypted: true,
-});
+})
 
 Event.on('group', async (userId) => {
-  pusher.trigger(`user${userId}`, 'refreshList', { type: 'group' });
+  pusher.trigger(`user${userId}`, 'refreshList', { type: 'group' })
+})
+
+Event.on('updateFriendshipStatus', async (data) => {
+  const channels = [`user${data.userId}`, `user${data.currentUserId}`]
+  pusher.trigger(channels, 'friendship', [])
+  pusher.trigger(channels, 'refreshList', { type: 'private' })
+})
+
+Event.on('requestSent', async (data) => {
+  pusher.trigger([`user${data.userId}`, `user${data.currentUserId}`], 'friendship', [])
 })

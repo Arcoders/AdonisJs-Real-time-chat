@@ -29,8 +29,10 @@ class UserController {
     async users ({ auth }) {
 
         const user = await auth.getUser()
+        
+        const friends = await User.friends(user._id, 'justIds')
 
-        return await User.query().whereNotIn('_id', [user._id]).limit(20).fetch()
+        return await User.query().whereNotIn('_id', friends.concat([user._id])).limit(20).fetch()
 
     }
 
