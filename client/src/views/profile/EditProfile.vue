@@ -24,27 +24,29 @@
                     i.material-icons.edit_i photo_size_select_actual
                 input(type='file' name='fileCover' )
 
-            button.save() Save
+            button.save(v-if="save && !loading" @click="saveProfile") Save
 
-            loading()
+            loading(v-if="loading")
 
 </template>
 
 <script>
 
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
 
 export default {
     
     methods: {
 
-        ...mapMutations('authentication', ['setUsername', 'setDescription'])
+        ...mapActions('authentication', ['saveProfile']),
+        ...mapMutations('authentication', ['setUsername', 'setDescription']),
 
     },
 
     computed: {
 
-        ...mapState('authentication', ['user']),
+        ...mapState('authentication', ['user', 'loading']),
+        ...mapGetters('authentication', ['save']),
 
     }
 

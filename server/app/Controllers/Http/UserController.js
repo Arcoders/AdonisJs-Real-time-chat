@@ -1,6 +1,7 @@
 'use strict'
 
 const User = use('App/Models/User');
+const { validate } = use('Validator')
 
 class UserController {
 
@@ -33,6 +34,25 @@ class UserController {
         const friends = await User.friends(user._id, 'justIds')
 
         return await User.query().whereNotIn('_id', friends.concat([user._id])).limit(20).fetch()
+
+    }
+
+    async edit ({ auth, request, response }) {
+
+        const { username, description } = request.all();
+
+        const user = await auth.getUser()
+
+        const duplicatedUsername = await User.query().whereNotIn('_id', [user._id]).where('username', username).count()
+
+        if (duplicatedUsername) return response.status(422).send([{
+            message: 'Username is already taken'
+        }])
+
+        user.merge({ username, description })
+        await user.save()
+
+        return { status: 'User edited successfully', user }
 
     }
 

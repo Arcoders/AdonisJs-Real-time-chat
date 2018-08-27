@@ -13,7 +13,7 @@ export default {
                 token: null,
                 user: null
             };
-            commit('authentication/setUser', { data }, { root: true })
+            commit('authentication/setUser', { data }, { root: true });
             router.push('/');
         }
 

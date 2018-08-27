@@ -27,6 +27,8 @@ export default new Vuex.Store({
 
   },
   plugins: [
-    presistedState(),
+    presistedState({
+      key: 'chatApp-Adonis',
+    }),
   ],
 });
