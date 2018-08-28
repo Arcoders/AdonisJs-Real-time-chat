@@ -29,6 +29,7 @@ export default new Vuex.Store({
   plugins: [
     presistedState({
       key: 'chatApp-Adonis',
+      paths: ['authentication'],
     }),
   ],
 });

@@ -47,6 +47,14 @@ export default {
             })   
         },
 
+        onFileChange({ commit }, data) {
+            let files = data.target.files || data.dataTransfer.files;
+            if (!files.length) return;
+            let reader = new FileReader();
+            reader.onload = e => commit(`set${data.target['name']}`, e.target.result);
+            reader.readAsDataURL(files[0]);
+        },
+
     },
 
     mutations: {
@@ -60,6 +68,12 @@ export default {
         },
         setDescription(state, e) {
             state.user.description = e.target.value;
+        },
+        setAvatar(state, avatar) {
+            state.user.avatar = avatar;
+        },
+        setCover(state, cover) {
+            state.user.cover = cover;
         },
         resetUser(state) {
             state.user = JSON.parse(localStorage.getItem('FreezedUser'));
@@ -80,7 +94,7 @@ export default {
             if (state.user) return state.user._id;
         },
         save(state) {
-            return (state.user.username.length >= 3 && state.user.description.length >= 5);
+           if (state.user) return (state.user.username.length >= 3 && state.user.description.length >= 5);
         }
     }
 
