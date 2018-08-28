@@ -1,7 +1,7 @@
 <template lang="pug">
     
     transition(name="fade")
-        .right
+        .right(v-if="!errorLoad")
             .head
 
                 h1
@@ -69,6 +69,7 @@ export default {
     created() {
         this.getUsers();
         this.setUserProfile(this.user);
+        if (this.profileId) this.getUser(this.profileId);
     },
 
     data() {
@@ -79,14 +80,14 @@ export default {
 
     methods: {
 
-        ...mapActions('profile', ['getUsers']),
+        ...mapActions('profile', ['getUsers', 'getUser']),
         ...mapMutations('profile', ['setUserProfile']),
 
     },
 
     computed: {
 
-        ...mapState('profile', ['users', 'records', 'userProfile', 'defaultCover']),
+        ...mapState('profile', ['users', 'records', 'userProfile', 'defaultCover', 'errorLoad']),
         ...mapState('authentication', ['user']),
         ...mapGetters('profile', ['records']),
 

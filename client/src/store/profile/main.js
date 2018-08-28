@@ -1,16 +1,11 @@
 /* eslint-disable */
 
 import Axios from '@/plugins/http';
-
-import edit from './edit';
+import router from '@/router';
 
 export default {
 
     namespaced: true,
-
-    modules: {
-        edit,
-    },
 
     state: {
         users: [],
@@ -34,6 +29,24 @@ export default {
             .catch(() => {
                 commit('setLoading', false);
                 commit('setErrorLoad', true);
+            })   
+
+        },
+
+        getUser({ commit }, userId) {
+
+            commit('setLoading', true);
+            commit('setErrorLoad', false);
+
+            return Axios().get(`/profile/get/${userId}`).then(({ data }) => {
+                if (!data) return router.push('/profile');
+                commit('setUserProfile', data);
+                commit('setLoading', false);
+            })
+            .catch(() => {
+                commit('setLoading', false);
+                commit('setErrorLoad', true);
+                router.push('/profile');
             })   
 
         },

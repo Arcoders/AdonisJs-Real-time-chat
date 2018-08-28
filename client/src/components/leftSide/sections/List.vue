@@ -6,7 +6,7 @@
 
         .contact(v-if="privateList" v-for='friend in rooms.friends')
 
-            router-link(exact-active-class='active_image' to="/")
+            router-link(exact-active-class='active_image' :to="{name: 'profile', params: {profileId: friend.user._id}}")
                 Avatar.avatar(:username='friend.user.username'  :src='friend.user.avatar' color='#fff')
 
             .preview

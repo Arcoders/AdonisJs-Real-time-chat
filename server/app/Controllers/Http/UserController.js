@@ -37,6 +37,12 @@ class UserController {
 
     }
 
+    async user ({ user }) {
+        
+        return user
+
+    }
+
     async edit ({ auth, request, response }) {
 
         const { username, description } = request.all();
