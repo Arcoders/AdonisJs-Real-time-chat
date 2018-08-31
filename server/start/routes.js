@@ -53,6 +53,10 @@ Route.group(() => {
 
   Route.get('chats', 'ChatController.chats')
 
+  // Messages ---------------------------------------------------------
+
+  Route.get('messages/:room_name/:chat_id', 'MessageController.messages');
+
   // Access chat ---------------------------------------------------------
 
   Route.get('group_chat/:group', 'GroupController.groupForChat').middleware(['groupMember']).bind('Group')

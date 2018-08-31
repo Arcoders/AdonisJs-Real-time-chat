@@ -6,16 +6,16 @@
 
         .contact(v-if="privateList" v-for='friend in rooms.friends')
 
-            router-link(exact-active-class='active_image' :to="{name: 'profile', params: {profileId: friend.user._id}}")
+            router-link(exact-active-class='active_image' :to="friendChatRoom(friend)")
                 Avatar.avatar(:username='friend.user.username'  :src='friend.user.avatar' color='#fff')
 
             .preview
                 .text
                     h5
-                        router-link(exact-active-class='active_chat' to="/")
+                        router-link(exact-active-class='active_chat' :to="friendChatRoom(friend)")
                             | {{ friend.user.username }}
                     h6
-                        router-link(exact-active-class='active_message' to="/")
+                        router-link(exact-active-class='active_message' :to="friendChatRoom(friend)")
                             span(v-if="friend.message")
                                 span(v-if="friend.message.body && friend.message.photo")
                                     i.material-icons.photo photo
@@ -83,6 +83,16 @@ export default {
 
     updateList() {
       this.$eventBus.$on('filter', data => this.setFiltered(data));
+    },
+
+    friendChatRoom(friendShip) {
+        return {
+            name: 'friend_chat',
+            params: {
+                friend_name: friendShip.user.username.replace(' ', '_'),
+                chat: friendShip,
+            }
+        }
     },
 
   },

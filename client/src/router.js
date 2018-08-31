@@ -62,6 +62,11 @@ export default new Router({
             },
           ],
         },
+        {
+          path: '/friend/:friend_name',
+          name: 'friend_chat',
+          component: () => import('./views/rooms/ChatBox.vue'),
+        },
       ],
     },
   ],

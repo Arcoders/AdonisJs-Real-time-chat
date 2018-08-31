@@ -6,6 +6,7 @@ import authentication from './authentication/main';
 import rooms from './rooms/main';
 import groups from './groups/main';
 import profile from './profile/main';
+import chats from './chats/main';
 
 Vue.use(Vuex);
 
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     rooms,
     groups,
     profile,
+    chats,
   },
   mutations: {
 
