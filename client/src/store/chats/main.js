@@ -1,6 +1,7 @@
 /* eslint-disable */
 
 import friend from './friend';
+import sendMessage from './sendMessage';
 
 export default {
 
@@ -8,6 +9,7 @@ export default {
 
     modules: {
         friend,
+        sendMessage,
     },
 
 }

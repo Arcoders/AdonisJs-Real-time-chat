@@ -13,23 +13,7 @@ export default {
 
     actions: {
 
-        getUser({ commit }, userId) {
-
-            commit('setLoading', true);
-            commit('setErrorLoad', false);
-
-            return Axios().get(`/profile/get/${userId}`).then(({ data }) => {
-                if (!data) return router.push('/profile');
-                commit('setUserProfile', data);
-                commit('setLoading', false);
-            })
-            .catch(() => {
-                commit('setLoading', false);
-                commit('setErrorLoad', true);
-                router.push('/profile');
-            })   
-
-        },
+        //
 
     },
 

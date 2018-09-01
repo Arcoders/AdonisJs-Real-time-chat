@@ -56,6 +56,8 @@ Route.group(() => {
   // Messages ---------------------------------------------------------
 
   Route.get('messages/:room_name/:chat_id', 'MessageController.messages');
+  Route.post('messages/send', 'MessageController.send')
+
 
   // Access chat ---------------------------------------------------------
 

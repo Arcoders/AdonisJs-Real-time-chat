@@ -39,6 +39,7 @@
 <script>
 
 import Axios from '@/plugins/http';
+import EventBus from '@/plugins/eventBus';
 import messages from '@/components/rightSide/chat/messages';
 import send from '@/components/rightSide/chat/send';
 import { mapState, mapMutations, mapGetters } from 'vuex';
@@ -65,6 +66,10 @@ export default {
             photo: null,
             messages: [],
         }
+    },
+
+    created() {
+        this.pushErrorMessage();
     },
 
     mounted() {
@@ -94,6 +99,9 @@ export default {
         },
 
         getMessages() {
+
+            this.pushRealTimeMessage();
+
             return Axios().get(`/messages/${this.$route.name}/${this.chat.id}`).then(({data}) => {
                 if (data.messages.length === 0) return this.welcomeMessage();
                 data.messages.reverse();
@@ -108,6 +116,7 @@ export default {
                         });
                 });
             })  
+            
         },
 
         welcomeMessage() {
@@ -120,6 +129,29 @@ export default {
                 text: 'Be the first to greet...',
                 time: new Date()
             });
+        },
+
+        pushErrorMessage() {
+            EventBus.$on('errorMessage', message => this.messages.push(message));
+        },
+
+        pushRealTimeMessage() {
+
+            this.$pusher.subscribe(`${this.$route.name}${this.chat.id}`).bind('newMessage', (message) => {
+
+                if (this.messages[0]['welcome']) this.messages.shift();
+                
+                this.messages.push({
+                    id: message.user._id,
+                    name: message.user.username,
+                    avatar: message.user.avatar,
+                    photo: message.photo,
+                    text: message.body,
+                    time: message.created_at
+                });
+
+            });
+
         },
 
     },

@@ -23,3 +23,7 @@ Event.on('updateFriendshipStatus', async (data) => {
 Event.on('requestSent', async (data) => {
   pusher.trigger([`user${data.userId}`, `user${data.currentUserId}`], 'friendship', [])
 })
+
+Event.on('message', async (data) => {
+  pusher.trigger(data.room, 'newMessage', data.message)
+})
