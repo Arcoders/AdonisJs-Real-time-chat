@@ -1,6 +1,6 @@
 <template lang="pug">
    
-    transition(name='slide-fade')   
+    transition(name='slide-fade') 
         .chat(v-if="chat")
 
             .head
@@ -32,7 +32,7 @@
                             a(@click="photo = null")
                                 i.material-icons clear
 
-            send(:showModal="showModal" @toggleModal="toggleModal")
+            send(:showModal="showModal" @toggleModal="setModal")
 
 </template>
 
@@ -42,7 +42,7 @@ import Axios from '@/plugins/http';
 import EventBus from '@/plugins/eventBus';
 import messages from '@/components/rightSide/chat/messages';
 import send from '@/components/rightSide/chat/send';
-import { mapState, mapMutations, mapGetters } from 'vuex';
+import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
 
 export default {
 
@@ -54,22 +54,15 @@ export default {
     watch: {
         rooms: {
             handler() {
-                this.getChatByName();
+                this.getChatByUserName();
             },
             deep: true,
         },
-    },
-
-    data() {
-        return {
-            showModal: false,
-            photo: null,
-            messages: [],
-        }
-    },
-
-    created() {
-        this.pushErrorMessage();
+        chat: {
+            handler() {
+                this.listenRealTimeMessage()
+            },
+        },
     },
 
     mounted() {
@@ -77,93 +70,22 @@ export default {
     },
 
     methods: {
-        ...mapMutations('chats/friend', ['setChat']),
+        ...mapActions('chats/friend', ['getMessages', 'getChat', 'getChatByUserName']),
+        ...mapMutations('chats/friend', ['setChat', 'pushConversation', 'setModal', 'setPhoto']),
 
-        getChat() {
-            let chat = this.$route.params.chat;
-            if (chat) {
-                this.setChat(chat);
-                this.getMessages()
-            }
-        },
-
-        getChatByName() {
-            let chat = this.rooms.friends.find(friend => friend.user.username == this.friendName);
-            if (!chat) this.$router.push('/home');
-            this.setChat(chat);
-            this.getMessages();
-        },
-
-        toggleModal(boolean) {
-            this.showModal = boolean;
-        },
-
-        getMessages() {
-
-            this.pushRealTimeMessage();
-
-            return Axios().get(`/messages/${this.$route.name}/${this.chat.id}`).then(({data}) => {
-                if (data.messages.length === 0) return this.welcomeMessage();
-                data.messages.reverse();
-                data.messages.forEach(data => {
-                        this.messages.push({
-                            id: data.user._id,
-                            name: data.user.username,
-                            avatar: data.user.avatar,
-                            photo: data.photo,
-                            text: data.body,
-                            time: data.created_at
-                        });
-                });
-            })  
-            
-        },
-
-        welcomeMessage() {
-            this.messages.push({
-                welcome: true,
-                id: this.user._id,
-                name: 'h i...',
-                avatar: 'images/welcome.png',
-                photo: null,
-                text: 'Be the first to greet...',
-                time: new Date()
-            });
-        },
-
-        pushErrorMessage() {
-            EventBus.$on('errorMessage', message => this.messages.push(message));
-        },
-
-        pushRealTimeMessage() {
-
+        listenRealTimeMessage() {
             this.$pusher.subscribe(`${this.$route.name}${this.chat.id}`).bind('newMessage', (message) => {
-
-                if (this.messages[0]['welcome']) this.messages.shift();
-                
-                this.messages.push({
-                    id: message.user._id,
-                    name: message.user.username,
-                    avatar: message.user.avatar,
-                    photo: message.photo,
-                    text: message.body,
-                    time: message.created_at
-                });
-
+                this.pushConversation(message);
             });
-
         },
 
     },
     
     computed: {
-        ...mapState('chats/friend', ['chat']),
+        ...mapState('chats/friend', ['chat', 'messages', 'showModal', 'photo']),
         ...mapState('rooms', ['rooms']),
         ...mapState('authentication', ['user']),
-
-        friendName() {
-            return this.$route.params.friend_name.replace('_', ' ');
-        }
+        ...mapGetters('chats/friend', ['friendName']),
     }
 
 }

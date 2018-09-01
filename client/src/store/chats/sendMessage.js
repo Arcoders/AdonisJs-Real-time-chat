@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 import Axios from '@/plugins/http';
-import EventBus from '@/plugins/eventBus';
 
 export default {
 
@@ -27,14 +26,11 @@ export default {
             .then(() => {
                 commit('reset');
             }).catch(() => {
-                EventBus.$emit('errorMessage', {
-                    id: rootState.authentication.user._id,
-                    name: rootState.authentication.user.username,
-                    avatar: rootState.authentication.user.avatar,
+                commit('chats/friend/errorMessage', {
+                    user: rootState.authentication.user,
                     photo: state.photo,
-                    text: state.body,
-                    error: true
-                });
+                    body: state.body,
+                }, { root: true });
                 commit('reset');
             });
             
