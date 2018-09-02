@@ -32,7 +32,7 @@
 
 import Search from '@/components/leftSide/sections/Search.vue';
 import List from '@/components/leftSide/sections/List.vue';
-import { mapState, mapActions, mapMutations } from 'vuex';
+import { mapState, mapActions, mapMutations, mapGetters } from 'vuex';
 
 export default {
 
@@ -50,21 +50,24 @@ export default {
     ...mapMutations('rooms', ['setPreviewMessageAndPushUp']),
 
     listenMessageEvent() {
-        this.friendsId.forEach(friendId => {
-            this.$pusher.subscribe(`friend_chat${friendId}`).bind('newMessage', message => {
-                this.setPreviewMessageAndPushUp({
-                    message,
-                    type: 'friends'
-                });
+        this.listenRomm(this.friendsId, 'friend_chat');
+        this.listenRomm(this.groupsId, 'group_chat');
+    },
+
+    listenRomm(object, type) {
+        object.forEach(id => {
+            this.$pusher.subscribe(`${type}${id}`).bind('newMessage', message => {
+                this.setPreviewMessageAndPushUp({ message, type: this.roomType });
             });
         });
-    },
+    }
 
   },
 
   computed: {
     ...mapState('authentication', ['user']),
-    ...mapState('rooms', ['privateList', 'friendsId']),
+    ...mapState('rooms', ['privateList', 'friendsId', 'groupsId']),
+    ...mapGetters('chats/friend', ['roomType']),
   },
 
 };

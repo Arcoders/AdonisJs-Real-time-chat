@@ -6,16 +6,16 @@
 
         .contact(v-if="privateList" v-for='friend in rooms.friends')
 
-            router-link(exact-active-class='active_image' :to="friendChatRoom(friend)")
+            router-link(exact-active-class='active_image' :to="friendRoom(friend)")
                 Avatar.avatar(:username='friend.user.username'  :src='friend.user.avatar' color='#fff')
 
             .preview
                 .text
                     h5
-                        router-link(exact-active-class='active_chat' :to="friendChatRoom(friend)")
+                        router-link(exact-active-class='active_chat' :to="friendRoom(friend)")
                             | {{ friend.user.username }}
                     h6
-                        router-link(exact-active-class='active_message' :to="friendChatRoom(friend)")
+                        router-link(exact-active-class='active_message' :to="friendRoom(friend)")
                             span(v-if="friend.message")
                                 span(v-if="friend.message.body && friend.message.photo")
                                     i.material-icons.photo photo
@@ -33,16 +33,16 @@
 
         .contact(v-if='!privateList' v-for='group in rooms.groups')
 
-            router-link(exact-active-class='active_image' to="/")
+            router-link(exact-active-class='active_image' :to="groupRoom(group)")
                 avatar.avatar(:username='group.name' :src='group.avatar' color='#fff')
 
             .preview
                 .text
                     h5
-                        router-link(exact-active-class='active_chat' to="/")
+                        router-link(exact-active-class='active_chat' :to="groupRoom(group)")
                             | {{ group.name }}
                     h6
-                        router-link(exact-active-class='active_message' to="/")
+                        router-link(exact-active-class='active_message' :to="groupRoom(group)")
                             span(v-if='group.message')
                                 span(v-if='group.message.body && group.message.photo')
                                     i.material-icons.photo photo
@@ -85,15 +85,29 @@ export default {
       this.$eventBus.$on('filter', data => this.setFiltered(data));
     },
 
-    friendChatRoom(friendShip) {
+    friendRoom(friendShip) {
         return {
             name: 'friend_chat',
             params: {
-                friend_name: friendShip.user.username.replace(' ', '_'),
+                friend_name: this.format(friendShip.user.username),
                 chat: friendShip,
             }
         }
     },
+
+    groupRoom(group) {
+        return {
+            name: 'group_chat',
+            params: {
+                group_name: this.format(group.name),
+                chat: group,
+            }
+        }
+    },
+
+    format(name) {
+        return name.replace(' ', '_');
+    }
 
   },
 

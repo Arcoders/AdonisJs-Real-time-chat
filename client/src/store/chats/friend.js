@@ -46,8 +46,8 @@ export default {
         setChat(state, chat) {
             state.chat = {
                 id: chat._id,
-                name: chat.user.username,
-                avatar: chat.user.avatar,
+                name: (chat.user) ? chat.user.username : chat.name,
+                avatar: (chat.user) ? chat.user.avatar : chat.avatar,
             };
             state.messages = [];
         },
@@ -89,11 +89,20 @@ export default {
     },
 
     getters: {
+        roomType(state, getters, rootState) {
+            const routeName = rootState.route.name;
+            if (routeName === "friend_chat") return 'friends';
+            if (routeName === "group_chat") return 'groups';
+        },
         friendName(state, getters, rootState) {
-            return rootState.route.params.friend_name.replace('_', ' ');
+            const paramName = (getters.roomType === 'groups') ? 'group_name' : 'friend_name';
+            return rootState.route.params[paramName].replace('_', ' ');
         },
         getChatByUserName(state, getters, rootState) {
-            return rootState.rooms.friends.find(friend => friend.user.username == getters.friendName);
+            return rootState.rooms[getters.roomType].find(room => {
+                const roomName = (room.user) ? room.user.username : room.name;
+                return roomName === getters.friendName
+            });
         }
     }
 

@@ -60,7 +60,9 @@ export default {
             [state.rooms.friends, state.rooms.groups] = [friends, groups];
         },
         setPreviewMessageAndPushUp(state, data) {
-            let i = state.rooms[data.type].findIndex(room => room._id === data.message.friend_chat);
+            const chatType = (data.type === 'friends') ? 'friend_chat' : 'group_chat';
+            state.privateList = (data.type === 'friends') ? true : false;
+            let i = state.rooms[data.type].findIndex(room => room._id === data.message[chatType]);
             let room = state.rooms[data.type][i];
             room.message = data.message;
             state.rooms[data.type].splice(i, 1);
