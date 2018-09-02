@@ -4,7 +4,7 @@
 
         button(type='button' @click='toggleModal')
 
-            i(v-bind:class="[showModal ? 'green' : '', 'material-icons']") photo_camera
+            i(v-bind:class="[modal ? 'green' : '', 'material-icons']") photo_camera
 
         .message
             input#msg(autocomplete='off' @keyup.enter='send' :value="body" @input="setBody" placeholder='Write a new message')
@@ -21,22 +21,19 @@ import { mapMutations, mapState, mapGetters, mapActions } from 'vuex';
 
 export default {
     
-     props: ['showModal'],
+     props: ['modal'],
 
      methods: {
 
-         ...mapMutations('chats/sendMessage', ['setBody']),
-         ...mapActions('chats/sendMessage', ['send']),
-
-         toggleModal() {
-            this.$emit('toggleModal', !this.showModal);
-        },
+        ...mapMutations('chats/sendMessage', ['setBody']),
+        ...mapActions('chats/sendMessage', ['send']),
+        ...mapMutations('chats/friend', ['toggleModal']),
 
      },
 
      computed: {
-         ...mapState('chats/sendMessage', ['body']),
-         ...mapGetters('chats/sendMessage', ['invalid']),
+        ...mapState('chats/sendMessage', ['body']),
+        ...mapGetters('chats/sendMessage', ['invalid']),
      }
 
 }

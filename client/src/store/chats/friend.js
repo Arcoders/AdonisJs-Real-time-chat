@@ -10,47 +10,38 @@ export default {
     state: {
         chat: null,
         messages: [],
-        showModal: false,
-        photo: null,
+        modal: false,
     },
 
     actions: {
 
         getMessages({ state, rootState, commit }) {
 
+            const userId = rootState.authentication.user._id;
             const url = `/messages/${rootState.route.name}/${state.chat.id}`;
 
             return Axios().get(url).then(({data}) => {
 
-                if (data.messages.length === 0) return commit('welcomeMessage', rootState.authentication.user._id);
-
+                if (data.messages.length === 0) return commit('welcomeMessage', userId);
                 data.messages.reverse().forEach(data => commit('pushConversation', data));
 
-            }).catch(error =>  console.log(error));
+            }).catch(() => commit('welcomeMessage', userId));
         },
 
-        getChat({ state, rootState, commit, dispatch }) {
-            let chat = rootState.route.params.chat;
-            if (!chat) return;
-            commit('setChat', chat);
-            dispatch('getMessages');
+        getChat({ state, rootState, commit, dispatch, getters }) {
+            let chat = rootState.route.params.chat || getters.getChatByUserName;
+            if (rootState.rooms.roomsDone && !chat) router.push('/home');
+            if (chat) {
+                commit('setChat', chat);
+                dispatch('getMessages');
+            }
         },
-
-        getChatByUserName({ state, rootState, commit, dispatch, getters }) {
-            let chat = rootState.rooms.friends.find(friend => friend.user.username == getters.friendName);
-            if (!chat) return router.push('/home');
-            commit('setChat', chat);
-            dispatch('getMessages');
-        }
 
     },
 
     mutations: {
-        setModal(state, boolean) {
-            state.showModal = boolean;
-        },
-        setPhoto(state, boolean) {
-            state.photo = boolean;
+        toggleModal(state) {
+            state.modal = !state.modal;
         },
         setChat(state, chat) {
             state.chat = {
@@ -71,7 +62,7 @@ export default {
                 time: new Date()
             });
         },
-        errorMessage(state, data, rootState) {
+        errorMessage(state, data) {
             state.messages.push({
                 id: data.user._id,
                 name: data.user.username,
@@ -100,6 +91,9 @@ export default {
     getters: {
         friendName(state, getters, rootState) {
             return rootState.route.params.friend_name.replace('_', ' ');
+        },
+        getChatByUserName(state, getters, rootState) {
+            return rootState.rooms.friends.find(friend => friend.user.username == getters.friendName);
         }
     }
 

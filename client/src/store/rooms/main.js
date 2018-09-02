@@ -11,11 +11,14 @@ export default {
         privateList: true,
         friends: [],
         groups: [],
+        friendsId: [],
+        groupsId: [],
         rooms: {
             friends: [],
             groups: [],
         },
         loading: false,
+        roomsDone: false,
     },
 
     actions: {
@@ -26,6 +29,7 @@ export default {
 
             return Axios().get('/chats').then(({ data }) => {
                 commit('setRooms', data);
+                commit('setRoomsDone');
                 commit('setLoading', false);
             })
             .catch(() => {
@@ -50,15 +54,26 @@ export default {
         setRooms(state, data) {
             const friends = arraySort(data.friends, 'message.created_at').reverse();
             const groups = arraySort(data.groups, 'message.created_at').reverse();
-            
+            state.friendsId = data.friendsId;
+            state.groupsId = data.groupsId;
             [state.friends, state.groups] = [friends, groups];
             [state.rooms.friends, state.rooms.groups] = [friends, groups];
+        },
+        setPreviewMessageAndPushUp(state, data) {
+            let i = state.rooms[data.type].findIndex(room => room._id === data.message.friend_chat);
+            let room = state.rooms[data.type][i];
+            room.message = data.message;
+            state.rooms[data.type].splice(i, 1);
+            state.rooms[data.type].splice(state.rooms[data.type].filter(room => !room.message).length, 0, room);
         },
         setFiltered(state, data) {
             [state.rooms.friends, state.rooms.groups] = [data.friends, data.groups];
         },
         setLoading(state, boolean) {
             state.loading = boolean;
+        },
+        setRoomsDone(state) {
+            state.roomsDone = true;
         },
         setPrivateList(state, boolean) {
             state.privateList = boolean;

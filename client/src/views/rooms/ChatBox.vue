@@ -19,27 +19,25 @@
 
                     messages(:messages="messages")
 
-                .modal(v-if="showModal")
+                .modal(v-if="modal")
 
                     .container(v-if="!photo")
                         label.upload_photo
                             i.material-icons file_upload
-                            input(type="file")
+                            input(type="file" name="photo" @change="onFileChange($event)" ref="photo")
 
                     .container(v-else)
                         .preview
                             img(:src="photo")
-                            a(@click="photo = null")
+                            a(@click="resetPhoto")
                                 i.material-icons clear
 
-            send(:showModal="showModal" @toggleModal="setModal")
+            send(:modal="modal")
 
 </template>
 
 <script>
 
-import Axios from '@/plugins/http';
-import EventBus from '@/plugins/eventBus';
 import messages from '@/components/rightSide/chat/messages';
 import send from '@/components/rightSide/chat/send';
 import { mapState, mapMutations, mapGetters, mapActions } from 'vuex';
@@ -52,17 +50,17 @@ export default {
     },
 
     watch: {
-        rooms: {
-            handler() {
-                this.getChatByUserName();
-            },
-            deep: true,
+        roomsDone() {
+            this.getChat();
         },
         chat: {
             handler() {
                 this.listenRealTimeMessage()
             },
         },
+        photo() {
+            if (this.photo) this.setUploadedPhoto(Object.values(this.$refs.photo.files).shift());
+        }
     },
 
     mounted() {
@@ -70,11 +68,13 @@ export default {
     },
 
     methods: {
-        ...mapActions('chats/friend', ['getMessages', 'getChat', 'getChatByUserName']),
-        ...mapMutations('chats/friend', ['setChat', 'pushConversation', 'setModal', 'setPhoto']),
+        ...mapActions('chats/friend', ['getMessages', 'getChat']),
+        ...mapMutations('chats/friend', ['setChat', 'pushConversation']),
+        ...mapActions('chats/sendMessage', ['onFileChange']),
+        ...mapMutations('chats/sendMessage', ['resetPhoto', 'setUploadedPhoto']),
 
         listenRealTimeMessage() {
-            this.$pusher.subscribe(`${this.$route.name}${this.chat.id}`).bind('newMessage', (message) => {
+            this.$pusher.subscribe(`${this.$route.name}${this.chat.id}`).bind('newMessage', message => {
                 this.pushConversation(message);
             });
         },
@@ -82,8 +82,9 @@ export default {
     },
     
     computed: {
-        ...mapState('chats/friend', ['chat', 'messages', 'showModal', 'photo']),
-        ...mapState('rooms', ['rooms']),
+        ...mapState('chats/friend', ['chat', 'messages', 'modal']),
+        ...mapState('chats/sendMessage', ['photo', 'uploadedPhoto']),
+        ...mapState('rooms', ['roomsDone']),
         ...mapState('authentication', ['user']),
         ...mapGetters('chats/friend', ['friendName']),
     }

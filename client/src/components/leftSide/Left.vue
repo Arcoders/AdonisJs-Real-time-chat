@@ -32,14 +32,14 @@
 
 import Search from '@/components/leftSide/sections/Search.vue';
 import List from '@/components/leftSide/sections/List.vue';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapMutations } from 'vuex';
 
 export default {
 
   components: { Search, List },
 
   created() {
-    this.chats();
+    this.chats().then(() => this.listenMessageEvent());
     this.$eventBus.$on('filter', data => this.toggle(data.type));
     this.$pusher.subscribe(`user${this.user._id}`).bind('refreshList', data => this.changeTo(data));
   },
@@ -47,12 +47,24 @@ export default {
   methods: {
     ...mapActions('authentication/logout', ['logout']),
     ...mapActions('rooms', ['chats', 'toggle', 'changeTo']),
+    ...mapMutations('rooms', ['setPreviewMessageAndPushUp']),
+
+    listenMessageEvent() {
+        this.friendsId.forEach(friendId => {
+            this.$pusher.subscribe(`friend_chat${friendId}`).bind('newMessage', message => {
+                this.setPreviewMessageAndPushUp({
+                    message,
+                    type: 'friends'
+                });
+            });
+        });
+    },
 
   },
 
   computed: {
     ...mapState('authentication', ['user']),
-    ...mapState('rooms', ['privateList']),
+    ...mapState('rooms', ['privateList', 'friendsId']),
   },
 
 };
