@@ -56,7 +56,7 @@ export default {
 
     listenRomm(object, type) {
         object.forEach(id => {
-            this.$pusher.subscribe(`${type}${id}`).bind('newMessage', message => {
+            this.$pusher.subscribe(`presence-${type}${id}`).bind('newMessage', message => {
                 this.setPreviewMessageAndPushUp({ message, type: this.roomType });
             });
         });

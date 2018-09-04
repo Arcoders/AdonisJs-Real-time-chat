@@ -9,6 +9,7 @@ export default {
 
     state: {
         chat: null,
+        onlineUsers: [],
         messages: [],
         modal: false,
     },
@@ -49,7 +50,12 @@ export default {
                 name: (chat.user) ? chat.user.username : chat.name,
                 avatar: (chat.user) ? chat.user.avatar : chat.avatar,
             };
+            state.onlineUsers = [];
             state.messages = [];
+        },
+        setOnlineUsers(state, members) {
+            state.onlineUsers = [];
+            members.each(member => state.onlineUsers.push(member));
         },
         welcomeMessage(state, userId) {
             state.messages.push({
@@ -103,7 +109,7 @@ export default {
                 const roomName = (room.user) ? room.user.username : room.name;
                 return roomName === getters.friendName
             });
-        }
+        },
     }
 
 }

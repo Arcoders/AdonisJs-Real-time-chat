@@ -64,5 +64,10 @@ Route.group(() => {
   Route.get('group_chat/:group', 'GroupController.groupForChat').middleware(['groupMember']).bind('Group')
   Route.get('friend_chat/:user', 'FriendShipController.userForChat').middleware(['isFriend']).bind('User')
 
+  // Pusher Auth ---------------------------------------------------------
+
+  Route.post('pusher', 'PusherAuthController.auth')
+  Route.get('pusher/:channel_name', 'PusherAuthController.onlineUsers')
+
 
 }).prefix('api').middleware(['auth'])

@@ -25,5 +25,5 @@ Event.on('requestSent', async (data) => {
 })
 
 Event.on('message', async (data) => {
-  pusher.trigger(data.room, 'newMessage', data.message)
+  pusher.trigger(`presence-${data.room}`, 'newMessage', data.message)
 })

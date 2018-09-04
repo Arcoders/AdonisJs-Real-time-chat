@@ -24,14 +24,6 @@ const snotifyOptions = {
 
 Vue.use(Snotify, snotifyOptions);
 
-Vue.use(VuePusher, {
-  api_key: '60efd870de38efff2291',
-  options: {
-    cluster: 'eu',
-    encrypted: true,
-  },
-});
-
 Vue.component('Avatar', Avatar);
 Vue.component('Loading', Loading);
 Vue.component('multiselect', Multiselect);
@@ -41,8 +33,23 @@ Vue.prototype.$eventBus = new Vue();
 
 sync(store, router);
 
-new Vue({
+const app = new Vue({
   router,
   store,
   render: h => h(App),
 }).$mount('#app');
+
+
+Vue.use(VuePusher, {
+  api_key: '60efd870de38efff2291',
+  options: {
+    authEndpoint: '/api/pusher',
+    auth: {
+      headers: {
+        Authorization: `Bearer ${app.$store.getters['authentication/token']}`,
+      },
+    },
+    cluster: 'eu',
+    encrypted: true,
+  },
+});

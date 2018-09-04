@@ -10,7 +10,12 @@
                 .info
 
                     p {{ chat.name }}
-                    p.online Offline
+                    
+                    p.online(v-if="onlineUsers.length != 1")
+                        span(v-for="onlineUser in onlineUsers") {{ onlineUser.info.username }}
+                            span.state.green &#8226; 
+
+                    p.online(v-else) Offline
                         span.state.red &#8226;
 
             .chat_box
@@ -55,7 +60,7 @@ export default {
         },
         chat: {
             handler() {
-                this.listenRealTimeMessage()
+                this.listenRealTimeMessage();
             },
         },
         photo() {
@@ -69,20 +74,22 @@ export default {
 
     methods: {
         ...mapActions('chats/friend', ['getMessages', 'getChat']),
-        ...mapMutations('chats/friend', ['setChat', 'pushConversation']),
+        ...mapMutations('chats/friend', ['setChat', 'pushConversation', 'setOnlineUsers']),
         ...mapActions('chats/sendMessage', ['onFileChange']),
         ...mapMutations('chats/sendMessage', ['resetPhoto', 'setUploadedPhoto']),
 
         listenRealTimeMessage() {
-            this.$pusher.subscribe(`${this.$route.name}${this.chat.id}`).bind('newMessage', message => {
-                this.pushConversation(message);
-            });
+            const a = this.$pusher.subscribe(`presence-${this.$route.name}${this.chat.id}`)
+            a.bind('newMessage', message => this.pushConversation(message));
+            a.bind('pusher:subscription_succeeded', () => this.setOnlineUsers(a.members));
+            a.bind('pusher:member_added', () => this.setOnlineUsers(a.members));
+            a.bind('pusher:member_removed', () => this.setOnlineUsers(a.members));
         },
 
     },
     
     computed: {
-        ...mapState('chats/friend', ['chat', 'messages', 'modal']),
+        ...mapState('chats/friend', ['chat', 'messages', 'modal', 'onlineUsers']),
         ...mapState('chats/sendMessage', ['photo', 'uploadedPhoto']),
         ...mapState('rooms', ['roomsDone']),
         ...mapState('authentication', ['user']),

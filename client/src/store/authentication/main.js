@@ -95,7 +95,10 @@ export default {
         },
         save(state) {
            if (state.user) return (state.user.username.length >= 3 && state.user.description.length >= 5);
-        }
+        },
+        token(state) {
+            if (state.token) return state.token;
+        },
     }
 
 }
