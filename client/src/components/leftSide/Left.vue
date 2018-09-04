@@ -50,7 +50,7 @@ export default {
     ...mapMutations('rooms', ['setPreviewMessageAndPushUp']),
 
     listenMessageEvent() {
-        this.listenRomm(this.friendsId, 'friend_chat');
+        //this.listenRomm(this.friendsId, 'friend_chat');
         this.listenRomm(this.groupsId, 'group_chat');
     },
 

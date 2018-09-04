@@ -11,8 +11,8 @@
 
                     p {{ chat.name }}
                     
-                    p.online(v-if="onlineUsers.length != 1")
-                        span(v-for="onlineUser in onlineUsers") {{ onlineUser.info.username }}
+                    p.online(v-if="onlineUsers.length > 1")
+                        span(v-for="onlineUser in onlineUsers" v-if="user._id != onlineUser.id") {{ onlineUser.info.username }}
                             span.state.green &#8226; 
 
                     p.online(v-else) Offline
@@ -68,28 +68,45 @@ export default {
         }
     },
 
+    data() {
+        return {
+            onlineUsers: [],
+        };
+    },
+
+    beforeRouteUpdate (to, from, next) {
+        this.$pusher.unsubscribe(`presence-${this.$route.name}${this.chat.id}`);
+        console.log('as');
+        next();
+    },
+
     mounted() {
         this.getChat();
     },
 
     methods: {
         ...mapActions('chats/friend', ['getMessages', 'getChat']),
-        ...mapMutations('chats/friend', ['setChat', 'pushConversation', 'setOnlineUsers']),
+        ...mapMutations('chats/friend', ['setChat', 'pushConversation']),
         ...mapActions('chats/sendMessage', ['onFileChange']),
         ...mapMutations('chats/sendMessage', ['resetPhoto', 'setUploadedPhoto']),
 
         listenRealTimeMessage() {
             const a = this.$pusher.subscribe(`presence-${this.$route.name}${this.chat.id}`)
             a.bind('newMessage', message => this.pushConversation(message));
-            a.bind('pusher:subscription_succeeded', () => this.setOnlineUsers(a.members));
-            a.bind('pusher:member_added', () => this.setOnlineUsers(a.members));
-            a.bind('pusher:member_removed', () => this.setOnlineUsers(a.members));
+            a.bind('pusher:subscription_succeeded', () => this.pushOnlineUsers(a.members));
+            a.bind('pusher:member_added', () => this.pushOnlineUsers(a.members));
+            a.bind('pusher:member_removed', () => this.pushOnlineUsers(a.members));
+        },
+
+        pushOnlineUsers(members) {
+            this.onlineUsers = [];
+            members.each(member => this.onlineUsers.push(member));
         },
 
     },
     
     computed: {
-        ...mapState('chats/friend', ['chat', 'messages', 'modal', 'onlineUsers']),
+        ...mapState('chats/friend', ['chat', 'messages', 'modal']),
         ...mapState('chats/sendMessage', ['photo', 'uploadedPhoto']),
         ...mapState('rooms', ['roomsDone']),
         ...mapState('authentication', ['user']),
