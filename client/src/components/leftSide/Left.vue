@@ -50,13 +50,13 @@ export default {
     ...mapMutations('rooms', ['setPreviewMessageAndPushUp']),
 
     listenMessageEvent() {
-        //this.listenRomm(this.friendsId, 'friend_chat');
-        this.listenRomm(this.groupsId, 'group_chat');
+        this.listenRooms(this.friendsId, 'friend_chat');
+        this.listenRooms(this.groupsId, 'group_chat');
     },
 
-    listenRomm(object, type) {
+    listenRooms(object, type) {
         object.forEach(id => {
-            this.$pusher.subscribe(`presence-${type}${id}`).bind('newMessage', message => {
+            this.$pusher.subscribe(`${type}${id}`).bind('updatePreviewMessage', message => {
                 this.setPreviewMessageAndPushUp({ message, type: this.roomType });
             });
         });

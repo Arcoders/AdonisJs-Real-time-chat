@@ -65,7 +65,7 @@ export default {
         },
         photo() {
             if (this.photo) this.setUploadedPhoto(Object.values(this.$refs.photo.files).shift());
-        }
+        },
     },
 
     data() {
@@ -76,7 +76,11 @@ export default {
 
     beforeRouteUpdate (to, from, next) {
         this.$pusher.unsubscribe(`presence-${this.$route.name}${this.chat.id}`);
-        console.log('as');
+        next();
+    },
+
+    beforeRouteLeave (to, from, next) {
+        this.$pusher.unsubscribe(`presence-${this.$route.name}${this.chat.id}`);
         next();
     },
 
@@ -91,11 +95,11 @@ export default {
         ...mapMutations('chats/sendMessage', ['resetPhoto', 'setUploadedPhoto']),
 
         listenRealTimeMessage() {
-            const a = this.$pusher.subscribe(`presence-${this.$route.name}${this.chat.id}`)
-            a.bind('newMessage', message => this.pushConversation(message));
-            a.bind('pusher:subscription_succeeded', () => this.pushOnlineUsers(a.members));
-            a.bind('pusher:member_added', () => this.pushOnlineUsers(a.members));
-            a.bind('pusher:member_removed', () => this.pushOnlineUsers(a.members));
+            const sub = this.$pusher.subscribe(`presence-${this.$route.name}${this.chat.id}`)
+            sub.bind('newMessage', message => this.pushConversation(message));
+            sub.bind('pusher:subscription_succeeded', () => this.pushOnlineUsers(sub.members));
+            sub.bind('pusher:member_added', () => this.pushOnlineUsers(sub.members));
+            sub.bind('pusher:member_removed', () => this.pushOnlineUsers(sub.members));
         },
 
         pushOnlineUsers(members) {
